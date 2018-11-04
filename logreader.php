@@ -753,7 +753,7 @@ class logReader
                         'method' => $this->entry['method'],
                         //'date' => $this->entry['date'],
                         //'time' => $this->entry['time'],
-                        'timezone' => $this->entry['timezone'],
+                        //'timezone' => $this->entry['timezone'],
                         'simplified_url' => $this->entry['simplified_url'], 
                         'bytes' => $this->entry['bytes']
                     ];
