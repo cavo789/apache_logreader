@@ -6,6 +6,8 @@
  * Description: Apache log reader
  *
  * Interface to allow easier reading of a .log file of Apache
+ * 
+ * GitHub repository: https://github.com/cavo789/apache_logreader
  */
 
 if (!defined('DS')) {
@@ -200,6 +202,7 @@ class logReader
 
         return true;
     }
+
     /**
      * Run the processing of the file (called by the 3. Process action).
      *
@@ -571,6 +574,11 @@ class logReader
     {
         $filename = realpath($this->root . '/' . $this->logFile);
 
+        if(!is_writable($filename)) {
+            // If the file is read-only, the Purge action can't be done
+            return sprintf('File %s is read-only', $this->logFile);
+        }
+
         // A few querystring parameters like (&print=1, &start=10, &view=html, ...) can be safely removed from the querystring
         $arrSimplifyURLs = self::getJSONValue('simplify_urls', 'regex', null, null, null);
 
@@ -662,7 +670,7 @@ class logReader
 
         return $result;
     } // function Purge()
-    
+
     /**
      * 2 - Diet.
      *
@@ -675,38 +683,44 @@ class logReader
 
         $filename=realpath($this->root . '/' . $this->logFile);
 
+        $result='';
+
+        // "ids" is set by the interface with the list of URIs that should be deleted from the
+        // file like f.i. "/style2.css" and "/reset.css" when these two files have been selected
+        // from the interface.
         if (isset($_POST['ids'])) {
-            $ids=$_POST['ids'];
+            if (is_writable($filename)) {
+                // Only if the file is writable
+                $ids=$_POST['ids'];
 
-            $newfile='';
+                $newfile='';
 
-            $file  = file_get_contents($filename);
-            $lines = explode("\n", $file);
-            $nbr   =0;
-            foreach ($lines as $line) {
-                $this->entry=logReaderFct::processApacheLogLine($line);
+                $file  = file_get_contents($filename);
+                $lines = explode("\n", $file);
+                $nbr   =0;
+                foreach ($lines as $line) {
+                    $this->entry=logReaderFct::processApacheLogLine($line);
 
-                if (isset($this->entry['url'])) {
-                    if (in_array(urlencode($this->entry['url']), $ids)) {
-                        $nbr++;
-                    } else {
-                        $newfile .= $line . "\n";
+                    if (isset($this->entry['url'])) {
+                        if (in_array(urlencode($this->entry['url']), $ids)) {
+                            $nbr++;
+                        } else {
+                            $newfile .= $line . "\n";
+                        }
                     }
                 }
-            }
 
-            // Keep an archive of the file before starting to remove rows
-            logReaderFct::MakeZip($this->root . '/' . $this->logFile . '.zip', $this->logFile);
+                // Keep an archive of the file before starting to remove rows
+                logReaderFct::MakeZip($this->root . '/' . $this->logFile . '.zip', $this->logFile);
 
-            //$this->logFile=rtrim($this->logFile,'_diet').'_diet';
-            $result='<h2>' . $nbr . ' lines removed</h2>';
+                //$this->logFile=rtrim($this->logFile,'_diet').'_diet';
+                $result='<h2>' . $nbr . ' lines removed</h2>';
 
-            $filename=$this->root . '/' . $this->logFile;
-            $fp      = fopen($filename, 'wb');
-            fwrite($fp, $newfile);
-            fclose($fp);
-        } else { // if (isset($_GET['ids']))
-            $result='';
+                $filename=$this->root . '/' . $this->logFile;
+                $fp      = fopen($filename, 'wb');
+                fwrite($fp, $newfile);
+                fclose($fp);
+            } 
         }
 
         $file  = file_get_contents($filename);
@@ -900,7 +914,9 @@ class logReader
         echo $html;
 
         return true;
+
     } // function Process
+
     /**
      * 4 - Kill the file.
      *
@@ -911,13 +927,17 @@ class logReader
         if ('' == trim($this->logFile)) {
             die('$this->logFile not initialized in ' . __METHOD__);
         }
+
         $filename=realpath($this->root . '/' . $this->logFile);
         if (file_exists($filename)) {
-            unlink($filename);
+            if(is_writable($filename)) {
+                unlink($filename);
+            }
         }
 
         return true;
     }
+
     /**
      * Download the file (f.i. only logs entries, honeypot, ...).
      *
@@ -1044,10 +1064,12 @@ class logReader
             die(readfile($temp));
         } // if(count($this->arrLogEntry)>0)
     } // function DownloadFile()
+
     private function var_dump($var, $title = null, $die = true)
     {
         return logReaderFct::var_dump($var, $title, $die);
     }
+
     /**
      * Return the current url, with all parameters.
      *
@@ -1068,6 +1090,7 @@ class logReader
 
         return $pageURL;
     } // function curPageURL()
+
     /**
      * Remove a variable from the querystring.
      *
@@ -1124,6 +1147,7 @@ class logReader
 
         return $return;
     } // function WhoIs()
+
     /**
      * Simple function to display a log entry.
      *
@@ -1136,13 +1160,13 @@ class logReader
     private function OutputEntry($nbr, $entry = null, $title = null)
     {
         if (null == $entry) {
-            $entry=$this->entry;
+            $entry = $this->entry;
         }
 
-        $host  =isset($entry['remoteHost']) ? $entry['remoteHost'] : null;
-        $url   =isset($entry['url']) ? $entry['url'] : null;
-        $agent =isset($entry['userAgent']) ? $entry['userAgent'] : null;
-        $status=isset($entry['status']) ? $entry['status'] : null;
+        $host   = isset($entry['remoteHost']) ? $entry['remoteHost'] : null;
+        $url    = isset($entry['url']) ? $entry['url'] : null;
+        $agent  = isset($entry['userAgent']) ? $entry['userAgent'] : null;
+        $status = isset($entry['status']) ? $entry['status'] : null;
 
         // Do we need to highlight something before displaying the entry ?
         $arrType=['Bad'=>'BadHighlight', 'Skip'=>'GoodHighlight', 'Gone'=>'GoneHighlight'];
@@ -1151,7 +1175,7 @@ class logReader
                 foreach ($entry['logReader'][$type] as $id => $arr) {
                     if (isset($arr['highlight'])) {
                         foreach ($arr['highlight'] as $key => $value) {
-                            $reason=isset($arr['reason']) ? $arr['reason'] : '';
+                            $reason = isset($arr['reason']) ? $arr['reason'] : '';
                             $reason .= isset($arr['regex']) ? '<br/><br/>regex = ' . $arr['regex'] : '';
                             $reason .= isset($arr['regex']) ? '<br/><br/>' . $key . ' = ' . $value : '';
 
@@ -1178,7 +1202,7 @@ class logReader
         }
 
         // Perhaps should we not output every keys.  For instance, we can configure LogReader to not output the [protocol] entry
-        $arr=self::getJSONValue('settings', 'output', 'hide', null, null);
+        $arr = self::getJSONValue('settings', 'output', 'hide', null, null);
         if (null != $arr) {
             foreach ($arr as $key) {
                 if (isset($entry[$key])) {
@@ -1188,49 +1212,49 @@ class logReader
         }
 
         if (isset($this->arrHTTPCodess[$status])) {
-            $filter         =self::removeQueryStringVar(self::curPageURL(), 'status');
-            $filter         =sprintf($this->_urlStatus, $filter . '&status=' . $entry['status'], $entry['status']);
-            $entry['status']=$entry['status'] . ' ==> ' . $this->arrHTTPCodess[$status] . $filter;
+            $filter          = self::removeQueryStringVar(self::curPageURL(), 'status');
+            $filter          = sprintf($this->_urlStatus, $filter . '&status=' . $entry['status'], $entry['status']);
+            $entry['status'] = $entry['status'] . ' ==> ' . $this->arrHTTPCodess[$status] . $filter;
         }
 
-        $tmp=(isset($this->arrRemoteHost[$host]['#'])) ? sprintf($this->_tooltipNumberHost, $this->arrRemoteHost[$host]['#']) : '';
+        $tmp = (isset($this->arrRemoteHost[$host]['#'])) ? sprintf($this->_tooltipNumberHost, $this->arrRemoteHost[$host]['#']) : '';
 
-        $filter             =self::removeQueryStringVar(self::curPageURL(), 'remoteHost');
-        $filter             =sprintf($this->_urlFilter, $filter . '&remoteHost=' . urlencode(base64_encode($host)), $host);
-        $entry['remoteHost']=self::WhoIs($entry['remoteHost']) . '&nbsp;<span style="font-size:0.8em;">******' . $tmp . $filter . '</span>';
+        $filter              = self::removeQueryStringVar(self::curPageURL(), 'remoteHost');
+        $filter              = sprintf($this->_urlFilter, $filter . '&remoteHost=' . urlencode(base64_encode($host)), $host);
+        $entry['remoteHost'] = self::WhoIs($entry['remoteHost']) . '&nbsp;<span style="font-size:0.8em;">******' . $tmp . $filter . '</span>';
 
-        $method         =isset($entry['method']) ? $entry['method'] : null;
-        $filter         =self::removeQueryStringVar(self::curPageURL(), 'method');
-        $filter         =sprintf($this->_urlFilter, $filter . '&method=' . urlencode($method), $host);
-        $entry['method']=$method . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
+        $method          = isset($entry['method']) ? $entry['method'] : null;
+        $filter          = self::removeQueryStringVar(self::curPageURL(), 'method');
+        $filter          = sprintf($this->_urlFilter, $filter . '&method=' . urlencode($method), $host);
+        $entry['method'] = $method . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
 
-        $filter            =self::removeQueryStringVar(self::curPageURL(), 'userAgent');
-        $filter            =sprintf($this->_urlFilter, $filter . '&userAgent=' . urlencode(base64_encode($agent)), $agent);
-        $entry['userAgent']=$entry['userAgent'] . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
+        $filter             = self::removeQueryStringVar(self::curPageURL(), 'userAgent');
+        $filter             = sprintf($this->_urlFilter, $filter . '&userAgent=' . urlencode(base64_encode($agent)), $agent);
+        $entry['userAgent'] = $entry['userAgent'] . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
 
-        $tmp         =(isset($this->arrURLs[$url])) ? sprintf($this->_tooltipNumberURL, $this->arrURLs[$url]['#']) : '';
-        $filter      =self::removeQueryStringVar(self::curPageURL(), 'url');
-        $filter      =sprintf($this->_urlFilter, $filter . '&URL=' . urlencode(base64_encode($url)), htmlentities($url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-        $entry['url']=$entry['url'] . '&nbsp;<span style="font-size:0.8em;">' . $tmp . $filter . sprintf($this->_iconURLDecode, htmlentities($url, ENT_QUOTES | ENT_HTML5, 'UTF-8')) . '</span>';
+        $tmp          = (isset($this->arrURLs[$url])) ? sprintf($this->_tooltipNumberURL, $this->arrURLs[$url]['#']) : '';
+        $filter       = self::removeQueryStringVar(self::curPageURL(), 'url');
+        $filter       = sprintf($this->_urlFilter, $filter . '&URL=' . urlencode(base64_encode($url)), htmlentities($url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        $entry['url'] = $entry['url'] . '&nbsp;<span style="font-size:0.8em;">' . $tmp . $filter . sprintf($this->_iconURLDecode, htmlentities($url, ENT_QUOTES | ENT_HTML5, 'UTF-8')) . '</span>';
 
-        $filter       =self::removeQueryStringVar(self::curPageURL(), 'date');
-        $filter       =sprintf($this->_urlFilter, $filter . '&date=' . urlencode($entry['date']), $entry['date']);
-        $entry['date']=$entry['date'] . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
+        $filter        = self::removeQueryStringVar(self::curPageURL(), 'date');
+        $filter        = sprintf($this->_urlFilter, $filter . '&date=' . urlencode($entry['date']), $entry['date']);
+        $entry['date'] = $entry['date'] . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
 
-        $filter          =self::removeQueryStringVar(self::curPageURL(), 'referrer');
-        $filter          =sprintf($this->_urlFilter, $filter . '&referrer=' . urlencode(base64_encode($entry['referrer'])), $entry['referrer']);
-        $url             =('-' != $entry['referrer']) ? '<a href="' . $entry['referrer'] . '" target="_blank">' . $entry['referrer'] . '</a>' : $entry['referrer'];
-        $entry['referrer']=$url . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
+        $filter            = self::removeQueryStringVar(self::curPageURL(), 'referrer');
+        $filter            = sprintf($this->_urlFilter, $filter . '&referrer=' . urlencode(base64_encode($entry['referrer'])), $entry['referrer']);
+        $url               = ('-' != $entry['referrer']) ? '<a href="' . $entry['referrer'] . '" target="_blank">' . $entry['referrer'] . '</a>' : $entry['referrer'];
+        $entry['referrer'] = $url . '&nbsp;<span style="font-size:0.8em;">' . $filter . '</span>';
 
         $class='';
 
         if (in_array($status, ['200', '403', '404', '500'])) {
-            $entry['status']='<span class="status' . $status . '">' . $entry['status'] . '</span>';
+            $entry['status'] = '<span class="status' . $status . '">' . $entry['status'] . '</span>';
         }
 
         if (isset($entry['logReader']['Skip'])) {
             if ('200' == $status) {
-                $entry['status']='<span class="Status200">' . $entry['status'] . '</span>';
+                $entry['status'] = '<span class="Status200">' . $entry['status'] . '</span>';
             }
             $class .= 'bg-success ';
         } else { // if(isset($entry['logReader']['Skip']))
@@ -1268,6 +1292,7 @@ class logReader
 
         return $html;
     } // function OutputEntry()
+
     /**
      * Based on the $json rule, detect if the entry contains an attack or not.
      *
@@ -1350,6 +1375,7 @@ class logReader
 
         return $isBad;
     } // function isBad()
+
     /**
      * Based on the $json rule, detect if the entry contains an old url (Redirect gone).
      *
@@ -1369,6 +1395,7 @@ class logReader
 
         return logReaderFct::CheckValueAgainstRegex($url, $arr);
     } // function isGone()
+
     /**
      * Check if the url should be ignored i.e. not processed at all by the script.
      * This is order to speed up the process.
@@ -1385,6 +1412,7 @@ class logReader
 
         return $isIgnore;
     }
+
     /**
      * Based on the $json rule, detect if the entry contains an url mentionned in the Honey pot.  If so, it's an attack.
      *
@@ -1425,6 +1453,7 @@ class logReader
 
         return [$HoneyPot, $found, $reason, $regex];
     } // function HoneyPot()
+
     /**
      * Based on the $json rule, detect if the entry can be skipped (=not displayed) or not.
      *
@@ -1502,24 +1531,28 @@ class logReader
 
         return $skip;
     } // function canbeSkipped()
+
     private function isIPWhiteListed($remoteHost)
     {
         $arr=self::getJSONValue('skip', 'remoteHost_whitelist', 'regex', null, 0);
 
         return logReaderFct::CheckValueAgainstRegex($remoteHost, $arr);
     }
+
     private function isGoodBot($remoteHost)
     {
         $arr=self::getJSONValue('skip', 'remoteHost', 'regex', null, 0);
 
         return logReaderFct::CheckValueAgainstRegex($remoteHost, $arr);
     }
+
     private function isGoodURL($url)
     {
         $arr=self::getJSONValue('skip', 'urls', 'regex', null, null);
 
         return logReaderFct::CheckValueAgainstRegex($url, $arr);
     }
+
     private function isBadBot($remoteHost)
     {
         $arr=self::getJSONValue('bad', 'remoteHost', 'full', null, null);
@@ -1532,30 +1565,35 @@ class logReader
 
         return logReaderFct::CheckValueAgainstRegex($remoteHost, $arr);
     }
+
     private function isBadURL($url)
     {
         $arr=self::getJSONValue('bad', 'urls', 'regex', null, null);
 
         return logReaderFct::CheckValueAgainstRegex($url, $arr);
     }
+
     private function isMonitoredURL($url)
     {
         $arr=self::getJSONValue('monitored', 'regex', null, null, null);
 
         return logReaderFct::CheckValueAgainstRegex($url, $arr);
     }
+
     private function isBadJoomlaComponent($url)
     {
         $arr=self::getJSONValue('bad', 'components', 'regex', null, null);
 
         return logReaderFct::CheckValueAgainstRegex($url, $arr);
     }
+
     private function isJoomlaComponent($url)
     {
         $arr=self::getJSONValue('settings', 'detectJoomlaComponent', 'regex', null, null);
 
         return logReaderFct::CheckValueAgainstRegex($url, $arr);
     }
+
     /**
      * Output the lines to analyze (i.e. not "identified" as bad requests, gone request, honey pot, ...).
      *
@@ -1582,6 +1620,7 @@ class logReader
 
         return true;
     } // function OutputLog()
+
     /**
      * Output the lines that correspond to old urls; flagged as "Gone".
      *
@@ -1606,6 +1645,7 @@ class logReader
 
         return true;
     } // function OutputGone()
+
     /**
      * Output HTTP errors, one "topic" by errors like 403, 404, 500.
      *
@@ -1650,6 +1690,7 @@ class logReader
 
         return true;
     } // function OutputHTTPErrors()
+
     /**
      * Output Honey pot.
      *
@@ -1701,6 +1742,7 @@ class logReader
 
         return true;
     } // function OutputHoneyPot()
+
     /**
      * Display the possible attacks.
      *
@@ -1735,6 +1777,7 @@ class logReader
 
         return true;
     } // function OutputHackAttempt()
+
     /**
      * Output the number of connections by remote host.
      *
@@ -1793,6 +1836,7 @@ class logReader
 
         return true;
     } // function OutputRemoteHost()
+
     /**
      * Output the number of requests by URLs.
      *
@@ -1850,6 +1894,7 @@ class logReader
 
         return true;
     } // function OutputURLs()
+
     /**
      * Do we've monitored urls ?  If so, output the information.
      *
@@ -1894,6 +1939,7 @@ class logReader
 
         return true;
     }
+
     /**
      * Joomla! components requested.
      *
@@ -1936,6 +1982,7 @@ class logReader
 
         return true;
     } // function OutputJoomlaComp()
+
     /**
      * Output all records concerning POST, PUT, TRACE or HEAD requests.
      *
@@ -1986,6 +2033,7 @@ class logReader
 
         return true;
     } // function OutputMethod()
+
 } // class logReader
 
 // -----------------------------------------------------------------------------------------------------------
@@ -2027,28 +2075,28 @@ if (null != $logfile) {
         case 'purge': // 1. Purge
         case 'purgeMAX':
             echo $logReader->Purge();
-
             break;
-        case 'diet':          // 2. Diet
+
+        case 'diet':  // 2. Diet
             $logReader->Diet();
-
             break;
-        case 'process':       // 3. Process
+
+        case 'process': // 3. Process
             if (true === $logReader->ProcessFile()) {
                 $logReader->Process();
             } else {
-                echo 'Fichier non accessible : ' . $logfile;
+                echo sprintf('File not accessible: %s', $logfile);
             }
-
             break;
-        case 'kill':          // 4. Kill
+
+        case 'kill': // 4. Kill
             $logReader->Kill();
 
             break;
         case 'download':
             $logReader->DownloadFile($data['type']);
             die();
-        case 'notepad':        // Open the logfile with Notepad
+        case 'notepad': // Open the logfile with Notepad
             try {
                 $cmd = 'Notepad++.exe "' . $logfile . '"';
                 if ('Windows' == substr(php_uname(), 0, 7)) {
@@ -2063,5 +2111,3 @@ if (null != $logfile) {
     // Step 0 : display the list of files of the logs folder
     $logReader->DisplayListOfFiles();
 }
-
-   //unset($logReader);
