@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="author" content="Christophe Avonture" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
+    <title>LogReader</title>
+    <link href="assets/css/theme.ice.min.css" rel="stylesheet" media="screen">
+    <link href="assets/css/alertify.core.css" rel="stylesheet" media="screen">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/bootstrap-select.css" rel="stylesheet" media="screen">
+    <link href="assets/css/logreader.css" rel="stylesheet" media="screen">
+</head>
+
+<body id="Top">
+    %REPO%
+    <div id="main" class="container">
+
+        <h1>Apache Log reader</h1>
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Filters to apply</a>
+                    </h3>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div id="filters" class="panel-body">
+                        <form>
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="edtURL">Parts of URL</label>
+                                    <select id="edtURL" class="form-control selectpicker" multiple>
+                                        <optgroup label="Folders" data-icon="glyphicon-folder-open">
+                                            <option>/administrator/</option>
+                                            <option>/components/</option>
+                                            <option>/images/</option>
+                                            <option>/media/</option>
+                                            <option>/modules/</option>
+                                            <option>/plugins/</option>
+                                            <option>/templates/</option>
+                                        </optgroup>
+                                        <optgroup label="Files" data-icon="glyphicon-file">
+                                            <option>index.php</option>
+                                            <option>robots.txt</option>
+                                        </optgroup>
+                                        <optgroup label="querystring" data-icon="glyphicon-question-sign">
+                                            <option>task=user.register</option>
+                                        </optgroup>
+                                    </select>
+                                    <input type="text" class="form-control" id="edtURLManual" placeholder="/secret_folder/;/images/baba.php;/stories/yop.php">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="edtStartDate">Period start date</label>
+                                    <input type="date" class="form-control" id="edtStartDate" placeholder="2018-12-04">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="edtReferrer">Referrer</label>
+                                    <select id="edtReferrer" class="form-control selectpicker" multiple>
+                                        <optgroup label="Search engines" data-icon="glyphicon-search">
+                                            <option>bing</option>
+                                            <option>google</option>
+                                            <option>facebook</option>
+                                            <option>twitter</option>
+                                            <option>yahoo</option>
+                                        </optgroup>
+                                        <optgroup label="Others" data-icon="glyphicon-circle-arrow-right">
+                                            <option>joomla</option>
+                                        </optgroup>
+                                    </select>
+                                    <input type="text" class="form-control" id="edtReferrerManual" placeholder="http://www.google.be">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="edtEndDate">Period end date</label>
+                                    <input type="date" class="form-control" id="edtEndDate" placeholder="2018-12-06">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="edtRemoteHost">Remote host / IP</label>
+                                    <select id="edtRemoteHost" class="form-control selectpicker" multiple>
+                                        <optgroup label="Presumed healthy" data-icon="glyphicon-ok-circle">
+                                            <option>ovh.fr</option>
+                                            <option>sfr.net</option>
+                                            <option>wanadoo.fr</option>
+                                        </optgroup>
+                                        <optgroup label="Bad" data-icon="glyphicon-fire">
+                                            <option>chello.pl</option>
+                                            <option>jazztel.es</option>
+                                            <option>poneytelecom</option>
+                                            <option>ttnet.com</option>
+                                        </optgroup>
+                                    </select>
+                                    <input type="text" class="form-control" id="edtRemoteHostManual" placeholder="127.0.0.1;255.255.255.255">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="edtStatus">Status</label>
+                                    <select id="edtStatus" class="form-control selectpicker" multiple
+                                        data-selected-text-format="count > 3">
+                                        <optgroup label="Information">
+                                            <option data-content="100 - continue">100</option>
+                                            <option data-content="101 - Switching Protocols">101</option>
+                                            <option data-content="102 - Processing">102</option>
+                                        </optgroup>
+                                        <optgroup label="Success">
+                                            <option data-content="200 - OK">200</option>
+                                            <option data-content="201 - Created">201</option>
+                                            <option data-content="202 - Accepted">202</option>
+                                            <option data-content="203 - Non-Authoritative Information">203</option>
+                                            <option data-content="204 - No Content">204</option>
+                                            <option data-content="205 - Reset Content">205</option>
+                                            <option data-content="206 - Partial Content">206</option>
+                                            <option data-content="207 - Multi-Status">207</option>
+                                            <option data-content="210 - Content Different">210</option>
+                                            <option data-content="226 - IM Used">226</option>
+                                        </optgroup>
+                                        <optgroup label="Redirection">
+                                            <option data-content="300 - Multiple Choices">300</option>
+                                            <option data-content="301 - Moved Permanently">301</option>
+                                            <option data-content="302 - Moved Temporarily">302</option>
+                                            <option data-content="303 - See Other">303</option>
+                                            <option data-content="304 - Not Modified">304</option>
+                                            <option data-content="305 - Use Proxy">305</option>
+                                            <option data-content="306 - (none)">306</option>
+                                            <option data-content="307 - Temporary Redirect">307</option>
+                                            <option data-content="308 - Permanent Redirect">308</option>
+                                            <option data-content="310 - Too many Redirects">310</option>
+                                        </optgroup>
+                                        <optgroup label="Client / web server error">
+                                            <option data-content="400 - Bad Request">400</option>
+                                            <option data-content="401 - Unauthorized">401</option>
+                                            <option data-content="402 - Payment Required">402</option>
+                                            <option data-content="403 - Forbidden">403</option>
+                                            <option data-content="404 - Not Found">404</option>
+                                            <option data-content="405 - Method Not Allowed">405</option>
+                                            <option data-content="406 - Not Acceptable">406</option>
+                                            <option data-content="407 - Proxy Authentication Required">407</option>
+                                            <option data-content="408 - Request Time-out">408</option>
+                                            <option data-content="409 - Conflict">409</option>
+                                            <option data-content="410 - Gone">410</option>
+                                            <option data-content="411 - Length Required">411</option>
+                                            <option data-content="412 - Precondition Failed">412</option>
+                                            <option data-content="413 - Request Entity Too Large">413</option>
+                                            <option data-content="414 - Request-URI Too Long">414</option>
+                                            <option data-content="415 - Unsupported Media Type">415</option>
+                                            <option data-content="416 - Requested range unsatisfiable">416</option>
+                                            <option data-content="417 - Expectation failed">417</option>
+                                            <option data-content="418 - I’m a teapot">418</option>
+                                            <option data-content="422 - Unprocessable entity">422</option>
+                                            <option data-content="423 - Locked">423</option>
+                                            <option data-content="424 - Method failure">424</option>
+                                            <option data-content="425 - Unordered Collection">425</option>
+                                            <option data-content="426 - Upgrade Required">426</option>
+                                            <option data-content="428 - Precondition Required">428</option>
+                                            <option data-content="429 - Too Many Requests">429</option>
+                                            <option data-content="431 - Request Header Fields Too Large">431</option>
+                                            <option data-content="449 - Retry With">449</option>
+                                            <option data-content="450 - Blocked by Windows Parental Controls">450</option>
+                                            <option data-content="451 - Unavailable For Legal Reasons">451</option>
+                                            <option data-content="456 - Unrecoverable Error">456</option>
+                                            <option data-content="499 - client has closed connection">499</option>
+                                        </optgroup>
+                                        <optgroup label="Server / application server error">
+                                            <option data-content="500 - Internal Server Error">500</option>
+                                            <option data-content="501 - Not Implemented">501</option>
+                                            <option data-content="502 - Bad Gateway ou Proxy Error">502</option>
+                                            <option data-content="503 - Service Unavailable">503</option>
+                                            <option data-content="504 - Gateway Time-out">504</option>
+                                            <option data-content="505 - HTTP Version not supported">505</option>
+                                            <option data-content="506 - Variant also negociate">506</option>
+                                            <option data-content="507 - Insufficient storage">507</option>
+                                            <option data-content="508 - Loop detected">508</option>
+                                            <option data-content="509 - Bandwidth Limit Exceeded">509</option>
+                                            <option data-content="510 - Not extended">510</option>
+                                            <option data-content="511 - Network authentication required">511</option>
+                                            <option data-content="520 - Web server is returning an unknown error">520</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <label for="edtUA">User agent</label>
+                                    <select id="edtUA" class="form-control selectpicker" multiple>
+                                        <optgroup label="Presumed healthy" data-icon="glyphicon-ok-circle">
+                                            <option>Chrome</option>
+                                            <option>Google</option>
+                                            <option>Mozilla</option>
+                                            <option>msnbot</option>
+                                            <option>Opera</option>
+                                            <option>Sogou</option>
+                                        </optgroup>
+                                        <optgroup label="Bad" data-icon="glyphicon-fire">
+                                            <option>AhrefsBot</option>
+                                            <option>BOT for JCE</option>
+                                            <option>JDatabaseDriver;SimplePie;$_POST;eval(;$base64_decode;JFactory;javascript;phpinfo;assert;#xf0;disconnect</option>
+                                            <option>libwww-perl</option>
+                                            <option>niki-bot</option>
+                                        </optgroup>
+                                    </select>
+                                    <input type="text" class="form-control" id="edtUAManual" placeholder="BOT for JCE">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="edtMethod">Method</label>
+                                    <select id="edtMethod" data-multiple-separator=";" class="selectpicker" multiple>
+                                        <option>GET</option>
+                                        <option>HEAD</option>
+                                        <option>POST</option>
+                                        <option data-divider="true"></option>
+                                        <option>OPTIONS</option>
+                                        <option>CONNECT</option>
+                                        <option>TRACE</option>
+                                        <option>PUT</option>
+                                        <option>PATCH</option>
+                                        <option>DELETE</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- accordion -->
+
+            <div class="row">
+                <h3>Please select a file <span class="help glyphicon glyphicon-file text-info" <span data-toggle="popover"
+                        title="help" data-content="<span class='tooltiptext'>
+                    No file? Please copy your Apache log file in %FOLDER%.
+                    </span>"></span></h3>
+
+                <table id="tblFiles" class="table tablesorter table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="max650 wrap">Filename</th>
+                            <th>Size</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>%LINES%</tbody>
+                </table>
+
+            </div> <!-- row -->
+
+            <div id="ajaxError">&nbsp;</div>
+
+        </div> <!-- main -->
+
+        <script>
+            var logReader = {};
+            logReader.URL = '%CURRENT_URL%';
+        </script>
+
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="assets/js/alertify.min.js"></script>
+        <script type="text/javascript" src="assets/js/jquery.tablesorter.combined.js"></script>
+        <script type="text/javascript" src="assets/js/bootstrap-select.js"></script>
+        <script type="text/javascript" src="assets/js/logreader.js"></script>
+
+</body>
+
+</html>

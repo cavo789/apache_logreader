@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="author" content="Christophe Avonture" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
+    <title>%LOGFILE% - LogReader</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/logreader.css" rel="stylesheet" media="screen">
+</head>
+
+<body id="Top">
+
+    <div class="container-full">
+        <div class="row">
+
+            <div class="col-sm-2 col-md-2">
+                <!-- menu -->
+                <div class="nav nav-stacked panel-group" id="sidebar">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><span class="glyphicon glyphicon-home"></span><a href="#Top">Log</a>&nbsp;<span
+                                    class="badge">%LOGROWNBR%</span></h4>
+                        </div>
+                        <div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-tree-conifer text-primary"></span><a href="#logs">Lines
+                                                to analyze</a>&nbsp;<span class="badge">%LOGNBR%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-warning-sign text-danger"></span><a class="%HACKSUCCESS% text-danger"
+                                                href="#attacks">Hack attempt</a>&nbsp;<span class="badge">%POSSIBLEATTACKSNBR%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-cutlery text-danger"></span><a
+                                                class="text-danger" href="#honeypot">Honey pot</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-tree-conifer text-primary"></span><a href="#gone">Gone</a>&nbsp;<span
+                                                class="badge">%GONENBR%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-fire text-primary"></span><a href="#403">HTTP
+                                                403</a>&nbsp;<span class="badge">%HTTPERRORS403NBR%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-fire text-primary"></span><a href="#404">HTTP
+                                                404</a>&nbsp;<span class="badge">%HTTPERRORS404NBR%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-fire text-primary"></span><a href="#500">HTTP
+                                                500</a>&nbsp;<span class="badge">%HTTPERRORS500NBR%</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#remoteHost"><span class="glyphicon glyphicon-book"></span>#
+                                    request / Hosts&nbsp;<span class="badge">%REMOTEHOSTNBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#urls"><span class="glyphicon glyphicon-book"></span>#
+                                    request / urls&nbsp;<span class="badge">%BYURLSNBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#joomlacomp"><span class="glyphicon glyphicon-book"></span>Joomla!
+                                    components requested&nbsp;<span class="badge">%JOOMLACOMPNBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#monitoredURLs"><span class="glyphicon glyphicon-eye-open"></span>Monitored
+                                    URLs&nbsp;<span class="badge">%MONITOREDURLSNBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#methodPOST"><span class="glyphicon glyphicon-pencil"></span>Method
+                                    POST&nbsp;<span class="badge">%METHODPOSTNBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#methodPUT"><span class="glyphicon glyphicon-pencil"></span>Method
+                                    PUT&nbsp;<span class="badge">%METHODPUTNBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#methodTRACE"><span class="glyphicon glyphicon-pencil"></span>Method
+                                    TRACE&nbsp;<span class="badge">%METHODTRACENBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"><a href="#methodHEAD"><span class="glyphicon glyphicon-pencil"></span>Method
+                                    HEAD&nbsp;<span class="badge">%METHODHEADNBR%</span></a></h4>
+                        </div>
+                    </div>
+                    <div id="statistics">This page has been built in %STATPAGEPROCESSSECONDS% seconds. Displaying it
+                        has required %STATPAGEDISPLAYSECONDS% seconds more. %STATMORE%</div>
+                </div>
+            </div> <!-- menu -->
+
+            <div id="tblProcess" class="col-sm-10 col-md-10">
+                <!-- content -->
+
+                <div class="well max1300">
+                    <h1>Apache logfile reader</h1>
+                    <span title="Ouvre le fichier dans Notepad" data-filename="%LOGFILE%">%LOGFILE%&nbsp;<span id="btnNotepad"
+                            class="glyphicon glyphicon-eye-open">&nbsp;</span></span>
+                    <span id="LOGFILENAME" data-task="download" title="Télécharge le fichier au format texte" data-type="full"
+                        class="text-info glyphicon glyphicon-download-alt" data-filename="%LOGFILE%">&nbsp;</span>
+                    %FILTERS%
+                </div>
+
+                <div id="logs" class="row">
+                    <h2>Logs&nbsp;<span class="badge">%LOGNBR%</span>&nbsp;
+                        <span title="Lignes analysées" class="help glyphicon glyphicon-eye-open text-info"></span>
+                        <span data-task="download" title="Télécharge le fichier au format texte" data-type="logs" class="help text-info glyphicon glyphicon-download-alt"
+                            data-filename="%LOGFILE%">&nbsp;</span>
+                    </h2>
+                    <div class="panel-group">
+                        <pre>%LOGENTRIES%</pre>
+                    </div>
+                </div> <!-- logs -->
+
+                <div id="attacks" class="row">
+                    <h2>Hack attempt&nbsp;<span class="badge">%POSSIBLEATTACKSNBR%</span>&nbsp;&nbsp;&nbsp;
+                        <span data-task="download" title="Télécharge le fichier au format texte" data-type="hack" class="help text-info glyphicon glyphicon-download-alt"
+                            data-filename="%LOGFILE%">&nbsp;</span>
+                        <small><a href="javascript:HideAllExceptThisClass('isBad','bg-HackSuccess');" data-toggle="popover"
+                                title="help" data-content="<span class='tooltiptext'>Hide every request except those having a status code 200 and a dangerous URL</span>">Show
+                                only status=200 with dangerous url</a></small>
+                    </h2>
+                    <pre id="isBad" class="isBad">%POSSIBLEATTACKSENTRIES%</pre>
+                </div> <!-- attacks -->
+
+                <div id="honeypot" class="col-sm-12 row">
+                    <!-- Honey pot -->
+                    <h3>Honey pot&nbsp;<span data-toggle="popover" title="Help" data-content="<span class='tooltiptext'>The list below will mention every remote host that has made a request to a monitored url (honey pot).  Be carefull before blacklisted these hosts...  The best thing to do is to open your logfile with a text editor and search, for each mentionned host, the requested urls and the name of the referrer (mentionned at the end of the line).  Be sure to not blacklist, f.i., a trusted bot like googlebot or bing.</span>"
+                            class="help glyphicon glyphicon-eye-open text-info"></span>&nbsp;<small>(remote host are
+                            mentionned below only if not yet blacklisted and if not whitelisted)</small></h3>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="max650 wrap">URL</th>
+                                <th>#</th>
+                                <th class="wrap">Reason</th>
+                                <th>Remote host</th>
+                            </tr>
+                        </thead>
+                        <tbody>%HONEYPOTENTRIES%</tbody>
+                    </table>
+                    %HONEYPOTMORE%
+                </div> <!-- Honey pot -->
+
+                <div id="gone">
+                    <h2>Gone&nbsp;<span class="badge">%GONENBR%</span>&nbsp;<span data-toggle="popover" title="help"
+                            data-content="<span class='tooltiptext'>In order to limit the number of log's lines to analyze, mention in the json file, key [gone][urls], any urls that doesn't exists anymore on your site (full url, left / right part or somewhere in the url)</span>"
+                            class="help glyphicon glyphicon-eye-open text-info"></span></h2>
+                    <div class="panel-group">
+                        <pre>%GONEENTRIES%</pre>
+                    </div>
+                </div> <!-- gone -->
+
+                <div id="httperrors">
+                    <h2>HTTP errors&nbsp;<span class="badge">%HTTPERRORSNBR%</span></h2>
+                    %HTTPERRORSENTRIES%
+                </div> <!-- httperrors -->
+
+                <!-- Specifics requests to examine -->
+                <h2>Specifics requests to examine</h2>
+
+                <!-- Number of connections by remote host -->
+                <div id="remoteHost" class="col-sm-12 row">
+                    <h3>Number of connections by remote host&nbsp;<span class="badge">%REMOTEHOSTNBR%</span></h3>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="350px">Host</th>
+                                <th>#</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>%REMOTEHOSTENTRIES%</tbody>
+                    </table>
+                </div> <!-- remoteHost -->
+
+                <!-- Number of connections by urls -->
+                <div id="urls" class="col-sm-12 row">
+                    <h3>Number of connections by urls&nbsp;<span class="badge">%BYURLSNBR%</span></h3>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="max650 wrap">URL</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>%BYURLSENTRIES%</tbody>
+                    </table>
+                </div> <!-- urls -->
+
+                <!-- Joomla! requested -->
+                <div id="joomlacomp" class="col-sm-12 row">
+                    <h3>Joomla! requested&nbsp;<span class="badge">%JOOMLACOMPNBR%</span>&nbsp;<span data-toggle="popover"
+                            title="Help" data-content="<span class='tooltiptext'>Do you've all components, modules, plugins, ... listed here below ?  If not (access to an inexistant component f.i.), think to blacklist this component since the request isn't normal and probably a tentative to exploit a known hack for him.</span>"
+                            class="help glyphicon glyphicon-eye-open text-info"></span></h3>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="max650 wrap">name</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>%JOOMLACOMPENTRIES%</tbody>
+                    </table>
+                </div> <!-- joomlacomp -->
+
+                <div id="monitoredURLs" class="col-sm-12 row">
+                    <h3>Monitored URLs&nbsp;<span class="badge">%MONITOREDURLSNBR%</span>
+                        <span data-task="download" title="Télécharge le fichier au format texte" data-type="monitoredURLs"
+                            class="help text-info glyphicon glyphicon-download-alt" data-filename="%LOGFILE%">&nbsp;</span>
+                    </h3>
+                    <pre class="isBad">%MONITOREDURLSENTRIES%</pre>
+                </div> <!-- monitoredURLs -->
+
+                <div id="methodPOST" class="col-sm-12 row">
+                    <h3>Method POST&nbsp;<span class="badge">%METHODPOSTNBR%</span>
+                        <span data-task="download" title="Télécharge le fichier au format texte" data-type="methodPOST"
+                            class="help text-info glyphicon glyphicon-download-alt" data-filename="%LOGFILE%">&nbsp;</span>
+                        <small>(not all POST method are mentionned here, POST done by whitelist remote host and a few
+                            to ignore like /?option=com_komento are not listed)</small>&nbsp;&nbsp;&nbsp;<small><a href="javascript:HideAllExceptThisClass('MonitoredPOST','status200');"
+                                data-toggle="popover" title="help" data-content="<span class='tooltiptext'>Hide every request except those having a status code 200</span>">Show
+                                only status=200</a></small>
+                    </h3>
+                    <pre id="MonitoredPOST" class="isBad">%METHODPOSTENTRIES%</pre>
+                </div><!-- methodPOST -->
+
+                <div id="methodPUT" class="col-sm-12 row">
+                    <h3>Method PUT&nbsp;<span class="badge">%METHODPUTNBR%</span>
+                        <span data-task="download" title="Télécharge le fichier au format texte" data-type="methodPUT"
+                            class="help text-info glyphicon glyphicon-download-alt" data-filename="%LOGFILE%">&nbsp;</span>
+                        <small>(not all PUT method are mentionned here, PUT done by whitelist remote host and a few to
+                            ignore are not listed)</small>&nbsp;&nbsp;&nbsp;<small><a href="javascript:HideAllExceptThisClass('MonitoredPUT','status200');"
+                                data-toggle="popover" title="help" data-content="<span class='tooltiptext'>Hide every request except those having a status code 200</span>">Show
+                                only status=200</a></small>
+                    </h3>
+                    <pre id="MonitoredPUT" class="isBad">%METHODPUTENTRIES%</pre>
+                </div><!-- methodPUT -->
+
+                <div id="methodTRACE" class="col-sm-12 row">
+                    <h3>Method TRACE&nbsp;<span class="badge">%METHODTRACENBR%</span>
+                        <span data-task="download" title="Télécharge le fichier au format texte" data-type="methodTRACE"
+                            class="help text-info glyphicon glyphicon-download-alt" data-filename="%LOGFILE%">&nbsp;</span>
+                        <small>(not all TRACE method are mentionned here, TRACE done by whitelist remote host and a few
+                            to ignore are not listed)</small>&nbsp;&nbsp;&nbsp;<small><a href="javascript:HideAllExceptThisClass('MonitoredTRACE','status200');"
+                                data-toggle="popover" title="help" data-content="<span class='tooltiptext'>Hide every request except those having a status code 200</span>">Show
+                                only status=200</a></small>
+                    </h3>
+                    <pre id="MonitoredTRACE" class="isBad">%METHODTRACEENTRIES%</pre>
+                </div><!-- methodTRACE -->
+
+                <div id="methodHEAD" class="col-sm-12 row">
+                    <h3>Method HEAD&nbsp;<span class="badge">%METHODHEADNBR%</span>
+                        <span data-task="download" title="Télécharge le fichier au format texte" data-type="methodHEAD"
+                            class="help text-info glyphicon glyphicon-download-alt" data-filename="%LOGFILE%">&nbsp;</span>
+                        <small>(not all HEAD method are mentionned here, HEAD done by whitelist remote host and a few
+                            to ignore are not listed)</small>&nbsp;&nbsp;&nbsp;<small><a href="javascript:HideAllExceptThisClass('MonitoredHEAD','status200');"
+                                data-toggle="popover" title="help" data-content="<span class='tooltiptext'>Hide every request except those having a status code 200</span>">Show
+                                only status=200</a></small>
+                    </h3>
+                    <pre id="MonitoredHEAD" class="isBad">%METHODHEADENTRIES%</pre>
+                </div><!-- methodHEAD -->
+
+            </div> <!-- tblProcess -->
+
+        </div> <!-- row -->
+
+    </div>
+    <!--container-full -->
+
+    <script>
+        var logReader = {};
+        logReader.URL = '%CURRENT_URL%';
+    </script>
+
+    <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/alertify.min.js"></script>
+    <script type="text/javascript" src="assets/js/logreader.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="author" content="Christophe Avonture" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
+    <title>%LOGFILE% - LogReader</title>
+    <link href="assets/css/theme.ice.min.css" rel="stylesheet" media="screen">
+    <link href="assets/css/alertify.core.css" rel="stylesheet" media="screen">
+    <link href="assets/css/alertify.bootstrap.css" rel="stylesheet" media="screen">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/logreader.css" rel="stylesheet" media="screen">
+</head>
+
+<body id="Top">
+
+    <div class="container">
+        <div class="row">
+
+            <h1>Logreader : 2. Diet</h1>
+
+            <div class="bg-success" style="padding:10px;">
+                %DIETRESULT%
+                <span data-task="download" title="Télécharge le fichier au format texte" data-type="full" class="text-info glyphicon glyphicon-download-alt"
+                    data-filename="%LOGFILE%">&nbsp;</span>
+            </div>
+
+            <form role="form" method="POST" id="frmDiet" action="logreader.php">
+
+                <hr />
+
+                <div class="btn-group">
+                    <button type="button" class="dietbutton btn btn-default btn-info" data-task="select_all">Select all</button>
+                    <button type="button" class="dietbutton btn btn-default btn-info" data-task="unselect_all">Unselect
+                        all</button>
+                    <button type="button" class="dietbutton btn btn-default btn-info" data-task="select_toggle">Toggle</button>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="dietbutton btn btn-default btn-danger">Remove selected lines</button>
+                </div>
+
+                <div class="btn-group" style="float:right;">
+                    <button id="tableExportJSON" title="Export as JSON" type="button" class="dietbutton btn btn-default btn-primary"
+                        data_task="export"><img width="16" height="16" src="assets/images/icons/json.png" />&nbsp;JSON</button>
+                    <button id="tableExportCSV" title="Export as CSV" type="button" class="dietbutton btn btn-default btn-primary"
+                        data_task="export"><img width="16" height="16" src="assets/images//icons/csv.png" />&nbsp;CSV</button>
+                    <button id="tableExportDOC" title="Export as DOC" type="button" class="dietbutton btn btn-default btn-primary"
+                        data-task="export"><img width="16" height="16" src="assets/images//icons/word.png" />&nbsp;DOC</button>
+                    <button id="tableExportXLS" title="Export as XLS" type="button" class="dietbutton btn btn-default btn-primary"
+                        data-task="export"><img width="16" height="16" src="assets/images//icons/xls.png" />&nbsp;XLS</button>
+                </div>
+
+                <br /><br />
+
+                <div class="btn-group">
+                    <button type="button" class="dietbutton btn btn-success btn-default link-filter" data-filter-column="2"
+                        data-filter-text="/cache/">/cache/</button>
+                    <button type="button" class="dietbutton btn btn-success btn-default link-filter" data-filter-column="2"
+                        data-filter-text="/components/">/components/</button>
+                    <button type="button" class="dietbutton btn btn-success btn-default link-filter" data-filter-column="2"
+                        data-filter-text="/modules/">/modules/</button>
+                    <button type="button" class="dietbutton btn btn-success btn-default link-filter" data-filter-column="2"
+                        data-filter-text="/plugins/">/plugins/</button>
+                    <button type="button" class="dietbutton btn btn-success btn-default link-filter" data-filter-column="2"
+                        data-filter-text="/templates/">/templates/</button>
+                    <button type="button" class="dietbutton btn btn-success btn-default link-filter" data-filter-column="2"
+                        data-filter-text="/tmp/">/tmp/</button>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="dietbutton btn btn-info btn-default link-filter" data-filter-column="2"
+                        data-filter-text="com_k2">com_k2</button>
+                    <button type="button" class="dietbutton btn btn-info btn-default link-filter" data-filter-column="2"
+                        data-filter-text="com_content">com_content</button>
+                    <button type="button" class="dietbutton btn btn-info btn-default link-filter" data-filter-column="2"
+                        data-filter-text="com_comprofiler">com_comprofiler</button>
+                    <button type="button" class="dietbutton btn btn-info btn-default link-filter" data-filter-column="2"
+                        data-filter-text="com_jce">com_jce</button>
+                    <button type="button" class="dietbutton btn btn-info btn-default link-filter" data-filter-column="2"
+                        data-filter-text="komento">komento</button>
+                </div>
+
+                <br /><br />
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".cur">cur</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".css">css</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".feed">feed</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".ico">ico</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".js">js</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".gif">gif</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".png">png</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".jpg">jpg</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".jpeg">jpeg</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".svg">svg</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".swf">swf</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".eot">eot</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".ttf">ttf</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".woff">woff</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".htm">htm</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".html">html</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".ini">ini</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".json">json</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".log">log</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".txt">txt</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".xml">xml</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".pdf">pdf</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".tar">tar</button>
+                    <button type="button" class="btn btn-primary link-filter" data-filter-column="2" data-filter-text=".zip">zip</button>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning btn-default link-filter" data-filter-column="2"
+                        data-filter-text=".asp">asp</button>
+                    <button type="button" class="btn btn-warning btn-default link-filter" data-filter-column="2"
+                        data-filter-text=".cgi">cgi</button>
+                    <button type="button" class="btn btn-warning btn-default link-filter" data-filter-column="2"
+                        data-filter-text=".jsp">jsp</button>
+                    <button type="button" class="btn btn-warning btn-default link-filter" data-filter-column="2"
+                        data-filter-text=".phtml">phtml</button>
+                    <button type="button" class="btn btn-warning btn-default link-filter" data-filter-column="2"
+                        data-filter-text=".sql">sql</button>
+                    <button type="button" class="btn btn-warning btn-default link-filter" data-filter-column="2"
+                        data-filter-text=".tpl">tpl</button>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning btn-default link-filter" data-filter-column="2"
+                        data-filter-text=".php">php</button>
+                </div>
+
+                <input type="hidden" value="%FILENAME%" name="file" />
+                <input type="hidden" value="diet" name="action" />
+
+                <table id="tblDiet" class="tablesorter table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="chk"></th>
+                            <th class="nbr">#</th>
+                            <!--<th class="date">Date</th>
+                            <th class="time">Time</th>-->
+                            <th data-placeholder="Search..." class="filter-select filter-exact ext">File Extension</th>
+                            <th data-placeholder="Search..." class="max650 wrap">URL</th>
+                            <th>Hits</th>
+                            <th class="filter-select filter-exact">Method</th>
+                            <th class="filter-select filter-exact">HTTP status</th>
+                            <th>Total size</th>
+                            <th>Human size</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="chk"></th>
+                            <th class="nbr">#</th>
+                            <!--<th class="date">Date</th>
+                            <th class="time">Time</th>-->
+                            <th class="ext">File Extension</th>
+                            <th class="max650 wrap">URL</th>
+                            <th>Hits</th>
+                            <th>Method</th>
+                            <th>HTTP status</th>
+                            <th>Total size</th>
+                            <th>Human size</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>%LINES%</tbody>
+                </table>
+
+                <div class="btn-group">
+                    <button type="button" class="dietbutton btn btn-default btn-info" data-task="select_all">Select all</button>
+                    <button type="button" class="dietbutton btn btn-default btn-info" data-task="unselect_all">Unselect
+                        all</button>
+                    <button type="button" class="dietbutton btn btn-default btn-info" data-task="select_toggle">Toggle</button>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="dietbutton btn btn-default btn-danger">Remove selected lines</button>
+                </div>
+
+
+            </form>
+
+        </div> <!-- row -->
+
+    </div>
+    <!--container-full -->
+
+    <script>
+        var logReader = {};
+        logReader.URL = '%CURRENT_URL%';
+    </script>
+
+    <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/alertify.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.tablesorter.combined.js"></script>
+    <script type="text/javascript" src="assets/js/tableExportJquery/js/tableExport.js"></script>
+    <script type="text/javascript" src="assets/js/tableExportJquery/js/jquery.base64.js"></script>
+    <script type="text/javascript" src="assets/js/tableExportJquery/js/html2canvas.js"></script>
+    <script type="text/javascript" src="assets/js/logreader.js"></script>
+
+</body>
+
+</html>

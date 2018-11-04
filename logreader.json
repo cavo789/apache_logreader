@@ -1,0 +1,1068 @@
+{
+  "settings": {
+    "debug": "false",
+    "full_info": "true",
+    "regex": {
+      "info": "Website that will be used when the user will click on a valid IP address.  This site will provide extra informations about the IP localisation and owner",
+      "matchIP": [
+        {
+          "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}).*$": "http://www.ip-adress.com/whois/%s"
+        }
+      ]
+    },
+    "output": {
+      "info": "[settings][output][hide] will be used to remove unnecessary fields before outputting the log entry.  For instance, mention 'identUser' if you don't need this information on the output.   Aim : display only valuable informations",
+      "hide": ["identUser", "authUser", "time", "timezone", "bytes", "protocol"]
+    },
+    "detectJoomlaComponent": {
+      "regex": [
+        {
+          ".*(/administrator/components/[^&/]*/).*$": "/administrator/components/%s"
+        },
+        { ".*(/components/[^&/]*/).*$": "/components/%s" },
+        { ".*(\\?option=[^&/<]*).*$": "?option=%s" },
+        { ".*(/modules/[^&/]*/).*$": "/modules/%s" },
+        { ".*(/templates/[^&/]*/).*$": "/templates/%s" },
+        { ".*(/plugins/system/[^&/]*/).*$": "/plugins/system/%s" },
+        { ".*(/plugins/content/[^&/]*/).*$": "/plugins/content/%s" }
+      ]
+    }
+  },
+  "HTTPStatus": [
+    { "200": "OK" },
+    { "201": "Created" },
+    { "202": "Accepted" },
+    { "206": "Partial Content" },
+    { "301": "Moved Permanently" },
+    { "302": "Found" },
+    { "303": "See Other" },
+    { "304": "Not modified" },
+    { "307": "Temporary Redirect" },
+    { "308": "Permanent  Redirect" },
+    { "400": "Bad Request" },
+    { "401": "Unauthorized" },
+    { "402": "Payment Required" },
+    { "403": "Forbidden" },
+    { "404": "Not Found" },
+    { "405": "Method Not Allowed" },
+    { "406": "Not Acceptable" },
+    { "407": "Proxy Authentication Required" },
+    { "408": "Request Timeout" },
+    { "409": "Conflict" },
+    { "410": "Gone" },
+    { "500": "Internal Server Error" },
+    { "501": "Not Implemented" },
+    { "502": "Bad Gateway" },
+    { "503": "Service Unavailable" },
+    { "504": "Gateway Timeout" }
+  ],
+  "monitored_info": "Each request to one of these url will be reported so you can verify who (IP) make a connection on these urls.",
+  "monitored": {
+    "regex": [
+      {
+        ".*((/administrator/index.php)(\\?option=com_login)?)$": "Joomla backend"
+      },
+      { "(/allevents/licences/a.php)$": "AllEvents licences" },
+      { "(/aesecure/setup.php)$": "aeSecure Interface" }
+    ]
+  },
+  "simplify_urls": {
+    "info": "These parameters, if found in the URL, will be removed, before starting the analyse.",
+    "regex": [
+      {
+        "(\\?|&(amp;)?)(Item)?id=[a-zA-Z0-9:-_]*": "Joomla id (can be an alias)"
+      },
+      { "(\\?|&(amp;)?)action=(item_add|register)": "Action parameter" },
+      { "(\\?|&(amp;)?)ajax=1": "Ajax parameter" },
+      { "(\\?|&(amp;)?)author=all": "Author parameter" },
+      {
+        "(\\?|&(amp;)?)bp_generatesefs=1": "This parameter appears on index.php, don't know yet from where it comes"
+      },
+      { "(\\?|&(amp;)?)break=1": "Joomla cleancache" },
+      {
+        "(\\?|&(amp;)?)cache_timeout=\\w+": "cache_timeout, used by com_installer"
+      },
+      { "(\\?|&(amp;)?)captchaurlmode=(audio|image)": "Captcha, used by CB" },
+      { "(\\?|&(amp;)?)captchasid=\\w+": "Captcha, used by CB" },
+      {
+        "(\\?|&(amp;)?)catid=[0-9]+": "catid parameter (used by com_content f.i.)"
+      },
+      { "(\\?|&(amp;)?)cid=[0-9]+": "cid parameter" },
+      {
+        "(\\?|&(amp;)?)cbpact=(editinvoiceaddress|showinvoiceslist)": "CBSubs parameter"
+      },
+      {
+        "(\\?|&(amp;)?)change_font=(in|de)crease": "Template paremeter, increase/decrease font"
+      },
+      { "(\\?|&(amp;)?)change_direction=(1|2)": "Change_direction parameter" },
+      { "(\\?|&(amp;)?)childforums=(0|1)": "Kunena childforums parameter" },
+      { "(\\?|&(amp;)?)cleancache=1": "Joomla cleancache" },
+      { "(\\?|&(amp;)?)cmd=(register)": "cmd parameter (used by com_users)" },
+      { "(\\?|&(amp;)?)controller=(file|foundry)": "Used by, a.o.t, Komento" },
+      {
+        "(\\?|&(amp;)?)component=(com_content|com_easyblog)": "Component parameter"
+      },
+      { "(\\?|&(amp;)?)component_id=[0-9]+": "Component_id parameter" },
+      { "(\\?|&(amp;)?)crop=(0|1)": "Crop Y/N" },
+      {
+        "(\\?|&(amp;)?)destination=node": "This parameter appears on index.php, don't know yet from where it comes"
+      },
+      { "(\\?|&(amp;)?)do=displayplans": "Do parameter (used by CBSubs)" },
+      {
+        "(\\?|&(amp;)?)download=[a-zA-Z0-9:-_]*": "Download (can be an alias)"
+      },
+      { "(\\?|&(amp;)?)feed=(rss2?)": "Joomla feed parameter" },
+      { "(\\?|&(amp;)?)field=username": "CB" },
+      { "(\\?|&(amp;)?)form_id=[0-9]+": "Form_id" },
+      {
+        "(\\?|&(amp;)?)format=(ajax|atom|csv|feed|html|json|opensearch|pdf|raw|rss|txt|vcf)": "Joomla format parameter"
+      },
+      { "(\\?|&(amp;)?)function=(checkvalue|testexists)": "CB Ajax check" },
+      { "(\\?|&(amp;)?)height=\\d+": "Height followed by a figure" },
+      { "(\\?|&(amp;)?)key=[a-zA-Z0-9-_]*": "aeSecure's Key" },
+      {
+        "(\\?|&(amp;)?)kmtcomponent=(com_content|com_easyblog)": "Komenta Joomla component"
+      },
+      {
+        "(\\?|&)lang(uage)?=(ar|en|en_gb|en_ES|en_es|fr|fr_fr|fr_FR|fr-FR|it|none|pt_BR|pt-PT|pt_pt|ru)": "Language parameter"
+      },
+      {
+        "(\\?|&(amp;)?)layout=(blog|canpropose|confirm|default|edit(or)?|event_crud|filters|form|item|json(activity|agenda|evt|place)|listings?|modal|participants|place_crud|plugin)": "Joomla Edit screen"
+      },
+      { "(\\?|&(amp;)?)logout=(0|1)": "Logout Y/N" },
+      { "(\\?|&(amp;)?)print=(0|1)": "Joomla Print preview" },
+      { "(\\?|&(amp;)?)limit=[0-9]*": "Joomla limit list parameter" },
+      { "(\\?|&(amp;)?)menutype=[a-zA-Z0-9-_]+": "Joomla menutype parameter" },
+      {
+        "(\\?|&(amp;)?)messageid=[0-9]+": "messageid parameter (used by UddeIM f.i.)"
+      },
+      { "(\\?|&(amp;)?)mobile=(0|1)": "Mobile parameter" },
+      { "(\\?|&(amp;)?)ModPagespeed=noscript": "Google PageSpeed" },
+      { "(\\?|&(amp;)?)mod(ule)?id=\\d+": "Joomla menutype parameter" },
+      { "(\\?|&(amp;)?)no_?html=(0|1)": "Joomla nohtml parameter" },
+      {
+        "(\\?|&(amp;)?)option=(com_acymailing|com_advancedmodules|com_aicontactsafe|com_akeeba|com_allevents|com_config|com_content|com_comprofiler|com_contact|com_cpanel|com_easyblog|com_installer|com_jaextmanager|com_k2|com_komento|com_kunena|com_login|com_menus|com_nonumbermanager|com_plugins|com_search|com_tags|com_templates|com_users|com_xmap)": "Joomla option parameter"
+      },
+      { "(\\?|&(amp;)?)page=(item|login|register)": "Page parameter" },
+      { "(\\?|&(amp;)?)page=[0-9]+": "Page parameter" },
+      { "(\\?|&(amp;)?)plans=\\d+": "Plans parameter (used by CBSubs)" },
+      {
+        "(\\?|&(amp;)?)plugin=(cbpaidsubscriptions|cb\\.captcha)": "Plugin parameter"
+      },
+      { "(\\?|&(amp;)?)quality=[0-9]+": "Quality followed by a figure" },
+      { "(\\?|&(amp;)?)query=[a-zA-Z0-9\\s]+": "Kunena search parameter" },
+      {
+        "(\\?|&(amp;)?)rand=[0-9]+": "rand parameter (used by com_users f.i.)"
+      },
+      { "(\\?|&(amp;)?)ratio=(0|1)": "Ratio followed by a figure" },
+      { "(\\?|&(amp;)?)raw=(0|1)": "Raw" },
+      { "(\\?|&(amp;)?)reason=register": "CB" },
+      { "(\\?|&(amp;)?)recip=[0-9]+": "recip parameter (used by UddeIM f.i.)" },
+      { "(\\?|&(amp;)?)record_id=[0-9]+": "Record_id" },
+      { "(\\?|&(amp;)?)rsd=RealSimpleDiscovery": "RealSimpleDiscovery" },
+      {
+        "(\\?|&(amp;)?)searchword=[a-zA-Z0-9-_]*": "Joomla Searchword parameter"
+      },
+      { "(\\?|&(amp;)?)session=[a-zA-Z0-9]+": "Session parameter" },
+      { "(\\?|&(amp;)?)simpleboardtabfposts_sortby=[a-zA-Z]*": "CB Tabs" },
+      { "(\\?|&(amp;)?)site=\\d+": "aeSecure's site parameter" },
+      { "(\\?|&(amp;)?)sorting=(asc|desc)": "Joomla Sorting parameter" },
+      {
+        "(\\?|&(amp;)?)(limit)?start=[0-9]*": "Joomla limitstart list parameter"
+      },
+      {
+        "(\\?|&(amp;)?)step=(check|download|install)": "step parameter (used by JCE)"
+      },
+      { "(\\?|&(amp;)?)tab=[a-zA-Z0-9-_]*": "tab parameter" },
+      {
+        "(\\?|&(amp;)?)task=(update\\.ajax|ajax|article\\.edit|articles\\.saveOrderAjax|captcha|checkupdate|confirm|dashboard|display|download|fieldclass|getOption|getResource|get|inbox|item\\.getParentItem|items\\.saveOrderAjax|loadlanguages|new|outbox|performcheckusername|plugin(class)?|registers?|search|show|tags\\.searchAjax|update(info)?|upgrade|user\\.login|version|vote)": "Joomla Task paremeter"
+      },
+      { "(\\?|&(amp;)?)template=[a-zA-Z-_]+": "Joomla Template" },
+      { "(\\?|&(amp;)?)time=[a-zA-Z0-9-:.]*": "time parameter" },
+      { "(\\?|&(amp;)?)tmpl=component": "Joomla tpml parameter" },
+      { "(\\?|&(amp;)?)token=[a-zA-Z0-9]+": "Token parameter" },
+      { "(\\?|&(amp;)?)type=(atom|css|rss)": "Joomla Type parameter" },
+      { "(\\?|&(amp;)?)user=[0-9]+": "User parameter (used by CBSubs f.i.)" },
+      {
+        "(\\?|&(amp;)?)user_rating=[0-9]+": "User_rating parameter (used by k2 f.i.)"
+      },
+      { "(\\?|&(amp;)?)utm_content=buffer[a-z0-9]+": "WebApp Buffer" },
+      { "(\\?|&(amp;)?)utm_medium=social": "WebApp Buffer" },
+      {
+        "(\\?|&(amp;)?)utm_source=(facebook.com|twitter.com)": "WebApp Buffer"
+      },
+      { "(\\?|&(amp;)?)utm_campaign=buffer": "WebApp Buffer" },
+      {
+        "(\\?|&(amp;)?)v(ersion)?=[a-zA-Z0-9.-]+(a|alpha|b|beta|RC)?": "Version parameter"
+      },
+      {
+        "(\\?|&(amp;)?)view=(aeds|articles?|backup|buadmin|category|contact|cpanel|default|editor|event|featured|form|fullcalendar|install|itemlist|item|login|notes|mediaList|plugins?|remind|reset|styles?|tags?|updates?|users?|xml)": "Joomla View"
+      },
+      { "(\\?|&(amp;)?)width=\\d+": "Width followed by a figure" },
+      { "(\\?|&(amp;)?)_=\\d+": "underscore variable followed by a figure" },
+      { "(\\?|&(amp;)?)[a-zA-Z0-9]*=1": "Token set to 1" },
+      { "(\\?fb_locale=(\\w\\w_\\w))": "Facebook Language search" }
+    ]
+  },
+  "purge": {
+    "urls": {
+      "info": "The purge node will be used when the user will click on the Purge button i.e. automatically remove a maximum of 'innocent' lines from the Apache's logfile.  The idea is to restrict as much as possible the number of lines to suspecious lines only.  Remark : the url will first be simplified i.e. generic querystring parameter will be removed (see simplify_urls node).",
+      "regex": [
+        {
+          "(\\.(7z|appcache|asf|avi|bak|bmp|css|cur|doc|docx|eot|eot2|eps|feed|fla|flv|f4v|gif|htm|html|ico|icon|ini|gz|jpa|jpeg|jpg|js|json|less|log|m4v|markdown|md|mkv|mo|mov|mp3|mp4|mpeg|mpg|ogg|ogv|otf|otf2|pdf|pem|png|po|ppt|pptx|project|psd|sql|svg|swf|txt|tif|ttf|ttf2|xls|xlsx|wav|woff|woff2|xaml|xap|xml|xsl|zip))$": "Remove URLs that points to static ressources (css, js, images, ...)"
+        },
+        { "(/index\\.php)$": "index.php page, no parameter" },
+        { "(/components/com_watchfulli/send\\.php)$": "Watchful.li" },
+        { "(.*/trackback/)$": "URLs ending with /trackback/" },
+        {
+          "(/media/com_allevents/css/css\\.php\\?w=\\d+&h=\\d+&b=([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})&f=([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})&aw=\\d+&ah=\\d+)$": "AllEvents css.php"
+        },
+        {
+          "(/allevents/display/event/default/[a-zA-Z0-9-_\\.]*)$": "AllEvents event's page"
+        },
+        {
+          "((CHANGELOG|COPYRIGHT|README|robots).txt)$": "Remove requests to insignifiant files"
+        },
+        {
+          "(/aesecure/accessdenied\\.php\\?s=403&fld=(includes))$": "Folder blocked by aeSecure"
+        },
+        {
+          "(/aesecure/accessdenied\\.php\\?s=\\d+)$": "aeSecure already blocked content"
+        },
+        {
+          "(.*/aesecure/setup\\.php\\?((&)?w=\\d+)*(&t=\\d+)*(&a=\\d+)*(&\\w+=\\w+)?)$": "aeSecure's interface"
+        },
+        {
+          "(.*/aesecure/json\\.php\\?(user=(\\w+)*)?(&w=\\d+)?)$": "aeSecure's json.php - Dashboard"
+        },
+        {
+          "(.*\\?option=com_komento(&controller=foundry&task=getResource&kmtcomponent=(com_content|com_easyblog))?)": "Joomla component : Komento"
+        },
+        {
+          "(.*/component/komento/profile/\\d+)$": "Komento - Show user's profile"
+        },
+        {
+          "(/component/tags/tag/[a-zA-Z-0-9-_]*)$": "Joomla tags followed by an alias"
+        },
+        {
+          "(/administrator/index\\.php\\?option=com_akeeba)$": "Joomla Akeeba"
+        },
+        {
+          "(/administrator/index\\.php\\?option=com_content)$": "Joomla backend - List of articles"
+        },
+        {
+          "(/administrator/index\\.php\\?option=com_content&view=article&layout=edit(&id=\\d+)?)$": "Joomla backend - Edit a specific article"
+        },
+        {
+          "^(/index\\.php\\?option=com_content(&view=(category|featured))?(&layout=blog)?((\\?|&)id=\\d+)?)$": "Joomla article"
+        },
+        { "(/component/content/(article)?)$": "Joomla content - article" },
+        {
+          "(/component/content/category/[a-zA-Z0-9-_]*)$": "Joomla content - category"
+        },
+        {
+          "(/index\\.php\\?option=com_tags((&view=tags?)?(&layout=edit)?(&id=\\d+)?(&task=tags\\.searchAjax)?)?(&like=[a-zA-Z-0-9-_+%]*)?)$": "Joomla com_tags"
+        },
+        {
+          "(/index\\.php\\?option=com_menus(&view=(items?|menus|menutypes))?(&menutype=[a-zA-Z-0-9]*)?(&layout=edit)?(&tmpl=component)?(&recordId=\\d+)?(&id=\\d+)?)$": "Joomla com_menus"
+        },
+        {
+          "(/index\\.php\\?option=com_menus(&task=(item\\.getParentItem|items\\.saveOrderAjax))?(&menutype=[a-zA-Z-0-9]*)?(&tmpl=component)?)$": "Joomla com_menus"
+        },
+        {
+          "(/index\\.php\\?option=com_advancedmodules(&view=modules?)?(&layout=edit)?(&id=\\d+)?)$": "Joomla com_advancedmodules"
+        },
+        {
+          "(/index\\.php\\?option=com_akeeba(&view=cpanel?)?(&task=updateinfo)?)$": "Joomla com_akeeba"
+        },
+        { "(/index\\.php\\?option=com_config)$": "Joomla com_config" },
+        { "(/index\\.php\\?option=com_cpanel)$": "Joomla com_cpanel" },
+        {
+          "(/index\\.php\\?option=com_installer(&view=(update|install))?(&task=update\\.ajax)?(&eid=\\d+)?(&cache_timeout=\\d+)?(&skip=\\d+)?)$": "Joomla com_installer"
+        },
+        {
+          "(/index\\.php\\?option=com_plugins(&view=plugins)?(layout=edit)?(&extension_id=\\d+)?)$": "Joomla com_plugins"
+        },
+        {
+          "(/index\\.php\\?option=com_users(&view=(notes|users))?(&layout=edit)?(&id=\\d+)?)$": "Joomla com_users"
+        },
+        {
+          "(/index\\.php\\?option=com_media(&view=mediaList)?(&folder=\\w+)?)$": "Joomla com_plugins"
+        },
+        {
+          "(/index\\.php\\?option=com_nonumbermanager(&view=process)?)$": "Joomla com_nonumbermanager"
+        },
+        {
+          "(/index\\.php\\?option=com_jaextmanager)$": "Joomla com_jaextmanager"
+        },
+        {
+          "(/index\\.php\\?option=com_templates(&view=styles?)?(&layout=edit)?(&id=\\d+)?)$": "Joomla com_templates"
+        },
+        {
+          "(/plugins/content/mavikthumbnails/mavikthumbnails/style\\.php\\?base=/plugins/content/mavikthumbnails)$": "Joomla mavikthumbnails"
+        },
+        { "^(/mod_pagespeed_beacon\\?.*)$": "mod_pagespeed_beacon" },
+        {
+          ".*(\\.(css|cur|gif|ico|jpg|jpeg|js|log|pdf|png|svg|swf|txt))$/": "Access to a static file (based on file's extension)"
+        },
+        {
+          ".*\\.(eot|ttf|woff2?)\\?*.*$": "Access to a webfont (with or without a querystring)"
+        },
+        {
+          "^(.*/components/(content|komento|users)(/)?)$": "Access to a valid component; no subfolder no querystring"
+        },
+        {
+          "^(.*/userprofile/[a-zA-Z0-9:-_]*)$": "Joomla Community Builder User's profile"
+        },
+        {
+          "(/components?/com_comprofiler/plugin/user/plug_cbcaptcha/captchaindex\\.php)$": "Joomla Community Builder captcha"
+        },
+        {
+          "(/components?/com_comprofiler/(done|lostpassword|registers)?)$": "Joomla Community Builder page"
+        },
+        {
+          "(/components?/com_comprofiler/plugin/user/plug_cbcaptcha/captchaindex\\.php\\?captchaurlmode=(audio|image)&captchasid=\\w+)$": "CB Captcha"
+        },
+        {
+          "(((fr|en)/)\\?option=com_comprofiler&task=pluginclass&plugin=cb\\.captcha&captchaurlmode=(audio|image)&captchasid=\\w+&format=raw)$": "CB Captcha"
+        },
+        {
+          "(\\?option=com_comprofiler&task=confirm&confirmcode=[a-zA-Z0-9]+)": "Joomla CB user confirmation"
+        },
+        {
+          "(.*/component/users/((&|&amp;)return=[a-zA-Z0-9=/]+)?)$": "Joomla Login/reset page"
+        },
+        {
+          "^([/]?(fr|en)?/component/users/\\?task=(user\\.login))?$": "Joomla Login page"
+        },
+        { "^(.*/userprofile/\\w+)$": "User's profile" },
+        { "(/components/tags/tag/\\w+)$": "Joomla tags component, RSS list" },
+        {
+          ".*\\.((css|js)\\?v(ersion)?=?[\\d\\.]+)(&sitepath=/)?$": "css or js static file followed by a version number (with or without a &sitepath=/ parameter)"
+        },
+        {
+          ".*(\\.(css|js)\\?[a-zA-Z\\d]+)$": "Static css or js file followed by something like a token (only composed by numbers and letters) (f.i. *.css?v=f6ba7eb1a92b8e66)"
+        },
+        {
+          ".*\\.((css|js)\\?v=[a-zA-Z\\d]+)$": "Static css or js followed by a version number composed of letters and/or figures"
+        },
+        {
+          ".*(/components?/mailto/(\\?|&(amp;)?)link=[a-z0-9]*)$": "Mail to component (share article with a friend)"
+        },
+        {
+          ".*(/components?/mailto/?(\\?|&(amp;)?)link=[a-z0-9]*)$": "Mail to component (share article with a friend)"
+        },
+        {
+          "(((fr|en)/)?(component/users/\\?view=\\w+&return=\\w+))": "Joomla view user profile page"
+        },
+        {
+          "(((fr|en)/)\\?option=com_users&view=\\w+&return=\\w+/?\\w+=?)": "Joomla view user profile page"
+        },
+        {
+          "^(/aesecure/json\\.php\\?task=(dashconfig|version)).*$/": "aeSecure remote site - Get latest version"
+        },
+        {
+          "^(/\\.download/download\\.php\\?.*)$/": "aeSecure download - installation script"
+        },
+        {
+          "^(/\\.download/get\\.php\\?.*)$/": "aeSecure download - package script"
+        },
+        {
+          "(/(fr|en)/component/tags/tag/\\d{1,5}\\.feed)$": "Joomla tags component (match something like /fr/component/tags/tag/6.feed)"
+        },
+        {
+          "^(/licences/d\\.php\\?folder=[a-zA-Z0-9-_.]*)$/": "AllEvents Licence script"
+        },
+        {
+          "(index\\.php\\?nn_qp=1&url=download\\.nonumber\\.nl/extensions\\.php[a-zA-Z0-9-_%]*(&timeout=\\d+)?)$": "Joomla NoNumber dowload"
+        },
+        {
+          ".*(/aesecure/setup\\.php\\?[a-zA-Z-\\d]+(&w=\\d{1,4})?(&t=\\d)?)$": "aeSecure page with key and, optionnal, an action (&w) and a tab (&t)"
+        },
+        {
+          "^(/)?(((fr|en)/)?(component/search/\\?searchword=(\\w+)?&searchphrase=all))": "Joomla search component"
+        },
+        {
+          "(/recherche\\?(searchword=[a-zA-Z0-9-_%]*)?(&ordering=newest)?&searchphrase=(all|exact)(&limit=\\w+)?(&areas\\[0\\]=(content|tags))?(&format=\\w+)?)$": "Joomla search component"
+        },
+        {
+          "^(/)?(((fr|en)/)?(component/search(/)?))": "Joomla search component"
+        },
+        {
+          "^(/)?(((fr|en)/)?\\?option=com_search&searchword=(\\d+)?)": "Joomla search component"
+        },
+        {
+          "(/administrator/index\\.php\\?option=com_jce(&view=cpanel)?(&plugin=(advlist|anchor|article|autolink|autosave|browser|caption|charmap|cleanup|clipboard|code|colorpicker|contextmenu|core|directionality|filemanager|fontcolor|fontselect|fontsizeselect|format|formatselect|fullscreen|iframe|imgmanager|imgmanager_ext|importcss|inlinepopups|layer|link|lists|media|mediamanager|microdata|nonbreaking|preview|print|searchreplace|source|spellchecker|style|styleselect|table|templatemanager|textcase|upload|visualblocks|visualchars|wordcount|xhtmlxtras))?)$": "Joomla com_jce in the Backend, followed by a token or not"
+        },
+        {
+          "(/index.php\\?option=com_jce(&view=editor)?(&layout=(editor|plugin))?(&task=loadlanguages&lang=\\w\\w)?(&layout=plugin)?(&plugin=(iframe|link|source))?)$": "JCE"
+        },
+        {
+          "(/index.php\\?option=com_jce(&view=editor)?(&layout=(editor|plugin))?(&task=loadlanguages&lang=\\w\\w)?(&layout=plugin)?(&plugin=(iframe|link|source))?)$": "JCE"
+        },
+        {
+          "^(/components/com_jce/editor/libraries/css/popup\\.css)$": "JCE component - css"
+        },
+        {
+          "^(/components/com_jce/editor/tiny_mce/plugins/(advlist|anchor|article|autolink|autosave|browser|caption|charmap|cleanup|clipboard|code|colorpicker|contextmenu|core|directionality|filemanager|fontcolor|fontselect|fontsizeselect|format|formatselect|fullscreen|iframe|imgmanager|imgmanager_ext|importcss|inlinepopups|layer|link|lists|media|mediamanager|microdata|nonbreaking|preview|print|searchreplace|source|spellchecker|style|styleselect|table|templatemanager|textcase|upload|visualblocks|visualchars|wordcount|xhtmlxtras)/editor_plugin\\.js\\?(&component_)?)$": "TinyMCE plugin - javascript"
+        },
+        {
+          "^(/components/com_jce/editor/tiny_mce/plugins/(advlist|anchor|article|autolink|autosave|browser|caption|charmap|cleanup|clipboard|code|colorpicker|contextmenu|core|directionality|filemanager|fontcolor|fontselect|fontsizeselect|format|formatselect|fullscreen|iframe|imgmanager|imgmanager_ext|importcss|inlinepopups|layer|link|lists|media|mediamanager|microdata|nonbreaking|preview|print|searchreplace|source|spellchecker|style|styleselect|table|templatemanager|textcase|upload|visualblocks|visualchars|wordcount|xhtmlxtras)/css/(content|dialog)\\.css\\?(&component_)?)$": "TinyMCE plugin - css"
+        },
+        {
+          "^(/components/com_jce/editor/tiny_mce/themes/(advanced|none)/editor_template\\.js\\?(&component_)?)$": "TinyMCE plugin"
+        },
+        {
+          "^(/components/com_jce/editor/tiny_mce/themes/(advanced|none)/skins/default/(content|ui)\\.css\\?(&component_)?)$": "TinyMCE plugin"
+        },
+        {
+          "^(.*\\?option=com_komento)$": "This url is generated by Komento on each page displayed by the site."
+        },
+        {
+          "^(/_?demo/aesecure/setup\\.php)$": "aeSecure demo interface, no parameter"
+        },
+        {
+          "^(/_?demo/aesecure/setup\\.php\\?&?(w=\\d*)?&?&?(lang=(fr-FR|en-GB))?)$/": "aeSecure demo interface with the action number and/or the language and, an optional &_ parameter"
+        },
+        {
+          "^(/_?demo/aesecure/setup\\.php\\?&?(w=\\d*)?&?(undefined)?&?(_=\\d+)?(&(a|t)=\\d)?(&lang=(en-GB|fr-FR)*)?)$": "aeSecure demo interface with the action number, the 'a' or 't' parameter and, an optional 'undefined' paramter, an optional &_ parameter"
+        },
+        {
+          "^(/_?demo/aesecure/dashboard/dashboard\\.php\\?)$": "aeSecure demo dashboard"
+        },
+        {
+          "^(/_?demo/aesecure/premium/third/tools/(phpsecinfo/psi|jamss/jamss)\\.php)$/": "aeSecure demo - Premium tool"
+        },
+        {
+          "(modules/mod_jaslideshowlite/assets/js/animate\\.htc\\?(curr|next|prev))$": "Joomla mod_jaslideshowlite frontend module"
+        }
+      ]
+    },
+    "remoteHost": {
+      "regex": [
+        { "(host.watchful.li)$": "Watchfulli/1.0 (+http://www.watchful.li)" }
+      ]
+    },
+    "status": ["304", "403"]
+  },
+  "purgeMAX": {
+    "urls": {
+      "info": "Remove the max lines, even if we known that theses requests are attacks.",
+      "regex": [
+        {
+          "(.*\\.(asp|aspx|ashx|cgi|exe|jsp)(\\?.*)?)$": "No chance that these URLs can be fired on an Apache server, with or without parameters"
+        },
+        { "(.*/php-ofc-library/.*)$": "Already blocked by aeSecure" },
+        {
+          "^((/[a-zA-Z0-9-_~éèàâêîôù,\\s]*)*)$": "A folder structure, no filename"
+        }
+      ]
+    },
+    "status": ["301", "303", "400", "401", "404", "405", "410", "500"]
+  },
+  "ignore": {
+    "info": "These urls won't be processed at all. This will speed up the process by removing unnecessary processing.",
+    "urls": {
+      "regex": []
+    }
+  },
+  "skip": {
+    "remoteHost_whitelist": {
+      "regex": [
+        { "^(193\\.191\\.212\\.55)$": "Christophe PC bureau" },
+        { "^(109\\.89\\.243\\.10)$": "Christophe PC privé" },
+        { "^(109\\.89\\.243\\.129)$": "Christophe PC privé" },
+        { "^(reve109\\.89\\.243\\.10)$": "Christophe PC privé" },
+        { "^(109\\.88\\.225\\.37)$": "Christophe PC privé" }
+      ]
+    },
+    "urls": {
+      "regex": []
+    },
+    "remoteHost_info": "List of valid bots, connections made by these bots will be reputed safe and won't appear anymore in the 'Lines to analyze' part",
+    "remoteHost": {
+      "regex": [
+        { "^(173\\.199\\.154\\.(1(6[0-1])))$": "Watchful.li" },
+        {
+          "^(208\\.115\\.111\\.(6[6-9]|7[0-5]))$": "http://www.opensiteexplorer.org/dotbot"
+        },
+        {
+          "^(208\\.115\\.113\\.(8[2-9]|9[0-3]))$": "http://www.opensiteexplorer.org/dotbot"
+        },
+        { "^(199\\.16\\.156\\.(1(2[4-6])))$": "Twitterbot/1.0" },
+        { "^(199\\.59\\.148\\.(2(09|1[0-1])))$": "Twitterbot/1.0" },
+        { "(199\\.59\\.149\\.21)$": "Twitterbot/1.0" },
+        { "(199\\.59\\.149\\.45)$": "Twitterbot/1.0" },
+        { ".*(\\.twttr\\.com)$": "Twitterbot/1.0" },
+        {
+          "^(31\\.13\\.24\\.([0-9]|1[0-9]|2[0-1])$)": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(31\\.13\\.64\\.([0-9]|1[0-8]))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(66\\.220\\.144\\.([0-9]|1[0-9]|20))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(69\\.63\\.176\\.([0-9]|1[0-9]|20))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(69\\.171\\.224\\.([0-9]|1[0-9]))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(74\\.119\\.76\\.([0-9]|1[0-9]|2[0-2]))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(103\\.4\\.96\\.([0-9]|1[0-9]|2[0-2]))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(173\\.252\\.64\\.([0-9]|1[0-8]))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "^(204\\.15\\.20\\.([0-9]|1[0-9]|2[0-2]))$": "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+        },
+        {
+          "(81\\.144\\.138\\.34)$": "Wotbox/2.01 (+http://www.wotbox.com/bot/)"
+        },
+        {
+          "(81\\.144\\.138\\.40)$": "Wotbox/2.01 (+http://www.wotbox.com/bot/)"
+        },
+        { "^(193\\.252\\.149\\.(1[3-6]))$": "VoilaBot BETA 1.2" },
+        {
+          "^(131\\.253\\.24\\.([3-9]|1[0-5]))$": "msnbot (+http://search.msn.com/msnbot.htm)"
+        },
+        {
+          "^(131\\.253\\.38\\.(1(0[0-3])))$": "msnbot (+http://search.msn.com/msnbot.htm)"
+        },
+        {
+          "^(131\\.253\\.38\\.(1[6-9]|2[0-3]))$": "msnbot (+http://search.msn.com/msnbot.htm)"
+        },
+        {
+          "^(65\\.55\\.215\\.(3[3-9]|[4-9][0-9]|1(0[0-9]|10)))$": "msnbot (+http://search.msn.com/msnbot.htm)"
+        },
+        {
+          "^(66\\.249\\.(64\\.([1-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))|(6[5-9]|7[0-9])\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))))$": "Googlebot; +http://www.google.com/bot.html"
+        },
+        {
+          ".*(\\.googlebot.com)$": "Googlebot/2.1; +http://www.google.com/bot.html"
+        },
+        {
+          ".*(\\.google.com)$": "Googlebot/2.1; +http://www.google.com/bot.html"
+        },
+        {
+          "^(178\\.255\\.215\\.(6[4-9]|7[0-9]))$": "Exabot/3.0; +http://www.exabot.com/go/robot"
+        },
+        {
+          "^(193\\.47\\.80\\.(2[5-9]|[3-6][0-9]|7[0-8]))$": "Exabot/3.0; +http://www.exabot.com/go/robot"
+        },
+        {
+          "^(100\\.43\\.81\\.(1(3[0-9])))$": "YandexBot/3.0; +http://yandex.com/bots"
+        },
+        {
+          "^(100\\.43\\.83\\.(1(39|[4-5][0-9]|6[0-1])))$": "YandexBot/3.0; +http://yandex.com/bots"
+        },
+        {
+          "(spider-100-43-81-152\\.yandex\\.com)$": "YandexBot/3.0; +http://yandex.com/bots"
+        },
+        {
+          "^(183\\.60\\.(212\\.(1(3[8-9]|[4-9][0-9])|2([0-4][0-9]|5[0-5]))|((2(1[3-4]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5])))|215\\.([0-9]|[1-4][0-9]|5[0-8])))$": "EasouSpider; +http://www.easou.com/search/spider.html"
+        },
+        {
+          "^(131\\.253\\.(46\\.(1(0[2-9]|[1-9][0-9])|2([0-4][0-9]|5[0-5]))|((4[6-7])\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5])))|47\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-3]))))$": "bingbot/2.0; +http://www.bing.com/bingbot.htm"
+        },
+        {
+          "^(157\\.55\\.(([0-9]|[1-4][0-9])\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))|50\\.([0-9]|[1-6][0-9]|7[0-8])))$": "bingbot/2.0; +http://www.bing.com/bingbot.htm"
+        },
+        {
+          "^(157\\.56\\.229\\.(1(3[8-9]|[4-9][0-9])|2([0-3][0-9]|4[0-7])))$": "bingbot/2.0; +http://www.bing.com/bingbot.htm"
+        },
+        {
+          "^(207\\.46\\.(12\\.(2(3[6-9]|4[0-9]|5[0-5]))|((1[2-3])\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5])))|13\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2(0[0-9]|1[0-5]))))$": "bingbot/2.0; +http://www.bing.com/bingbot.htm"
+        },
+        {
+          "(208\\.43\\.245\\.245)$": "SiteExplorer/1.0b; +http://siteexplorer.info/)"
+        },
+        {
+          "(208\\.43\\.252\\.249)$": "SiteExplorer/1.0b; +http://siteexplorer.info/)"
+        },
+        { "(5\\.9\\.73\\.8)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(5\\.9\\.21\\.202)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(5\\.9\\.97\\.244)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(5\\.9\\.145\\.110)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(46\\.4\\.72\\.200)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(69\\.30\\.238\\.26)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(78\\.46\\.42\\.203)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(88\\.198\\.66\\.11)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(148\\.251\\.14\\.166)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(148\\.251\\.42\\.9)$": "http://www.majestic12.co.uk/bot.php?+" },
+        { "(148\\.251\\.51\\.240)$": "http://www.majestic12.co.uk/bot.php?+" },
+        {
+          "(crawler-148-251-14-166\\.mj12bot\\.mj12\\.fi)$": "http://www.majestic12.co.uk/bot.php?+"
+        },
+        {
+          "(hosted-by\\.leaseweb\\.com)$": "MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+"
+        },
+        {
+          "(raptor207\\.startdedicated\\.com)$": "MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+"
+        },
+        {
+          "(217\\.69\\.133\\.220)$": "Mail.RU_Bot/2.0; +http://go.mail.ru/help/robots"
+        },
+        {
+          "(fetcher2\\.mail\\.ru)$": "Mail.RU_Bot/2.0; +http://go.mail.ru/help/robots"
+        },
+        { "(95\\.85\\.1\\.108)$": "updown_tester" },
+        { "(141\\.0\\.170\\.143)$": "updown_tester" },
+        { "(146\\.185\\.170\\.99)$": "updown_tester" },
+        { "(162\\.243\\.114\\.218)$": "updown_tester" },
+        { "(162\\.243\\.115\\.95)$": "updown_tester" },
+        { "(162\\.243\\.211\\.20)$": "updown_tester" },
+        { "(192\\.81\\.213\\.81)$": "updown_tester" },
+        { "(192\\.81\\.222\\.248)$": "updown_tester" },
+        { "(198\\.199\\.81\\.54)$": "updown_tester" },
+        { "(198\\.199\\.124\\.206)$": "updown_tester" },
+        { "(83\\.233\\.207\\.74)$": "CMS Crawler: http://www.cmscrawler.com" },
+        {
+          "(68\\.180\\.225\\.47)$": "Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp"
+        },
+        {
+          "(host\\.watchful\\.li)$": "Watchfulli/1.0 (+http://www.watchful.li)"
+        },
+        {
+          "(74\\.86\\.158\\.106-static\\.reverse\\.softlayer\\.com)$": "UptimeRobot/2.0; http://www.uptimerobot.com/"
+        },
+        {
+          "(74\\.86\\.158\\.106)$": "UptimeRobot/2.0; http://www.uptimerobot.com/"
+        },
+        {
+          "(123\\.125\\.71\\.79)$": "Baiduspider/2.0; +http://www.baidu.com/search/spider.html"
+        },
+        {
+          "(183\\.60\\.244\\.24)$": "Baiduspider/2.0; +http://www.baidu.com/search/spider.html"
+        },
+        {
+          "(220\\.181\\.108\\.168)$": "Baiduspider/2.0; +http://www.baidu.com/search/spider.html"
+        },
+        { "(metrixca2\\.nmsrv\\.com)$": "GTmetrix http://gtmetrix.com/" },
+        {
+          "(pl1-sv2\\.feedly\\.com)$": "Feedly/1.0 http://www.feedly.com/fetcher.html"
+        },
+        {
+          "(pl2-sv2\\.feedly\\.com)$": "Feedly/1.0 http://www.feedly.com/fetcher.html"
+        },
+        {
+          "(crawl421\\.us\\.archive\\.org)$": "special_archiver/3.1.1 +http://www.archive.org/details/archive.org_bot"
+        },
+        {
+          "(37\\.58\\.100\\.[0-9]{1,3}-static\\.reverse\\.softlayer\\.com)$": "AhrefsBot/5.0; +http://ahrefs.com/robot/"
+        },
+        {
+          "(180\\.76\\.6\\.[0-9]{1,3})$": "Baiduspider/2.0; +http://www.baidu.com/search/spider.html"
+        },
+        {
+          ".*(\\.crawl\\.baidu\\.com)$": "Baiduspider/2.0; +http://www.baidu.com/search/spider.html"
+        },
+        { "(crawl-([^?&]*)\\.voilabot\\.orange\\.fr)$": "VoilaBot BETA 1\\.2" },
+        {
+          "(fetcher([^?&]*).p.mail.ru)$": "Mail.RU_Bot/2.0; +http://go.mail.ru/help/robots"
+        },
+        {
+          ".*(\\.search\\.msn\\.com)$": "bingbot/2.0; +http://www.bing.com/bingbot.htm"
+        },
+        {
+          ".*(\\.yse\\.yahoo\\.net)$": "Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp"
+        },
+        {
+          "(static\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.clients\\.your-server\\.de)$": "MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+"
+        }
+      ]
+    },
+    "status_info": "Entries with the HTTP status code mentionned here below won't be mentionned in the 'Lines to analyze' part",
+    "status": ["304"],
+    "userAgent": {
+      "info": "Any connections from these userAgent are safe",
+      "regex": [
+        { "^(Watchfulli/1.0 \\(\\+http://www.watchful.li\\))$": "Watchfulli" }
+      ]
+    },
+    "monitorPOST": {
+      "urls": {
+        "regex": [
+          {
+            "^(/?((fr|en)/)?\\?option=com_komento)$/": "POST method on /?option=com_komento shouldn't be tracked in the MonitorPOST section"
+          }
+        ]
+      },
+      "remoteHost": {
+        "regex": [
+          { "(host.watchful.li)$": "Watchfulli/1.0 (+http://www.watchful.li)" }
+        ]
+      }
+    }
+  },
+  "gone": {
+    "urls": {
+      "info": "Mention here the URLs that doesn't exists anymore on your site; they'll be skipped",
+      "regex": [
+        {
+          "^/?(alpha_j30|lectures|livres|agathe-colombier-hochberg|carlos-salem|eric-laurent|jacqueline-harpman|james-patterson|katherine-pancol|simon_kiwik|tom-rob-smith)/?(.)*$": "This root folder doesn't exists anymore"
+        },
+        {
+          ".*(/allevents/(fr/)?(dmo|error-reporting|sites|sportingevents|todo))/?(.)*$": "This folder doesn't exists anymore"
+        },
+        {
+          "(Albert%20Camus|Anna%20Gavalda|Am%C3%A9lie%20Nothomb|Bernard%20Weber|Carl%20Honor%C3%A9|Charlaine%20Harris|David%20Gibbins|Fran%C3%A7oise%20Dorin|Fr%C3%A9d%C3%A9ric%20Beigbeder|Guillaume%20Musso|Harlan%20Coben|Herbert%20George%20Wells|JeanChristophe%20Grang%C3%A9|JeanMarie%20Rouart|Jed%20Mercurio|Mika%20Waltari|Paolo%20Giordino|Patrick%20Graham|Patrick%20S%C3%BCskind|Paulo%20Coelho|Philippe%20Grimbert|Pieter%20Aspe|Richard%20Matheson|Stefan%20Zweig|Steig%20Larsson|Stephenie%20Meyer|Sylvie%20Testud|Yasmina%20Khadra)": "Old 'Lectures' pages"
+        },
+        {
+          "(free-streaming-words-and-pictures-2015-full-movie-online|free-streaming-night-moves-2013-full-movie-online|now-gratuit-en-streaming-fastlife-complet-film|free-streaming-hellion-2014-full-movie-online)": "Old spam on the forum"
+        }
+      ]
+    }
+  },
+  "honeypot": {
+    "urls": {
+      "info": "Any request made on these urls will be monitored and the remote host who've made the connection will be reported",
+      "regex": [
+        {
+          ".*((/administrator(/)?(/index.php)?)(\\?option=com_login)?)$": "Joomla backend"
+        },
+        {
+          "(\\.(htaccess|htpasswd))(.)*$": "Attempt to download an Apache configuration file"
+        },
+        { "^(/htdocs/)(.)*$": "Attempt to access sensitve Apache folder" },
+        {
+          "(/(boot\\.ini|php\\.ini)).*$": "Attempt to download Operating system file"
+        },
+        {
+          "^(/(configuration\\.php|install\\.php|cron\\.php|update\\.php)).*$": "Attempt to execute installation file, at the root level"
+        },
+        { ".*(\\.\\.\\\\\\\\.\\.\\\\).*$": "Windows ..\\\\..\\\\ notation" },
+        {
+          "^(/(components|images|logs|modules|plugins)/[^/]+\\.php(\\?*)).*$": "Attempt to execute a .php file stored directly in a subfolder like components or images.  There is no php script file in one of these folders."
+        },
+        {
+          ".*(/xmlrpc(\\.php)?/?).*$": "xmlrpc found in the url (filename or foldername)"
+        },
+        {
+          ".*(/com_extplorer/).*$": "Try to get to accessd to the exTplorer interface (if not done by the site's admin, it's surelly an exploit attempt)"
+        },
+        {
+          "(/admin\\.php(\\?)*(.)*)$": "The admin.php doesn't script exists on a Joomla! website"
+        },
+        {
+          "^(/(cache|libraries|logs|tmp)/)(.)*\\.php$": "Access to restrictive folders and attempt to execute a php script"
+        },
+        {
+          "/(wp-(login|trackback)\\.php).*$": "This script doesn't exists on a Joomla! website"
+        },
+        {
+          "(/wp-content/(.)*)$": "wp-content folder doesn't exists on a Joomla! website"
+        },
+        {
+          ".*(/(backup|web|www|wwwroot)\\.(gz|tar\\.gz|rar|zip))$": "Tentative to access a backup file"
+        },
+        {
+          ".*(\\.(bak|config|rar|sql|ini|log|sh|inc|dist))$": "Tentative to access a specific file extension"
+        },
+        {
+          "^(/(wordpress|wp-admin|wp-includes|wp-upload)/?)$": "This folder doesn't exists on a Joomla! site"
+        }
+      ]
+    }
+  },
+  "bad": {
+    "urls": {
+      "info": "Any connections on these URLs (full, left, right, part) are bad because, f.i., these pages doesn't exists on the site.  These requests will be reported in the 'Possible attacks' part",
+      "regex": [
+        {
+          "(/admin\\.php(\\?)*(.)*)$": "The [@FOUND@] script doesn't exists on a Joomla! website"
+        },
+        {
+          "(\\.(htaccess|htpasswd))(.)*$": "Attempt to download an Apache configuration file [@FOUND@]"
+        },
+        { ".*(\\.\\.\\\\\\\\.\\.\\\\).*$": "Windows ..\\..\\ notation" },
+        { ".*(&mosConfig_).*$": "Joomla 1.0 attack" },
+        {
+          ".*(\\\\).*": "The presence of a \\ character denotes an specific encoding and, perhaps, an attempt to obfuscate the real url "
+        },
+        {
+          "(/ali\\.txt)$": "The presence of @FOUND@ is a symptom of a successfull hack"
+        },
+        {
+          ".*(allow_url_include|auto_prepend_file).*": "Attempt to append/include php code into PHP.ini by the use of illegal statements"
+        },
+        { ".*(&_REQUEST_|&GLOBALS).*$": "Trying to change global variables" },
+        {
+          "\\(boot\\.ini.*)$": "Attempt to download Operating system file [@FOUND@]"
+        },
+        {
+          "^(/config\\.php)$": "The [@FOUND@] file doesn't exists on a Joomla! installation"
+        },
+        {
+          ".*(/(register|signup|uu)\\.php)$": "The [@FOUND@] script doesn't exists on a Joomla! website"
+        },
+        {
+          "(^/components/com_content/article\\.php\\?.*)$": "The [@FOUND@] script doesn't exists on a Joomla! website"
+        },
+        {
+          "(^/components/com_content/views/article/articie.php)$": "The [@FOUND@] script doesn't exists on a Joomla! website"
+        },
+        {
+          "(^/components/com_userprofiles/userprofiles.php)$": "The [@FOUND@] script doesn't exists on a Joomla! website"
+        },
+        {
+          "(/(components|images|logs|modules|plugins)/[^/]+\\.php(\\?*)).*$": "Attempt to execute a .php file stored directly in a subfolder like components or images.  There is no php script file in one of these folders."
+        },
+        {
+          "(^/administrator/components/com_banners/web-infor.php)$": "The [@FOUND@] script doesn't exists on a Joomla! website"
+        },
+        {
+          "/(wp-(login|trackback)\\.php).*$": "The [@FOUND@] script doesn't exists on a Joomla! website"
+        },
+        { ".*(/admin-profile).*$/": "No [@FOUND@] page on a Joomla! website" },
+        {
+          "^(/administrator/components.*/.*\\.php.*)$": "Direct access to a php script located on the backend ([@FOUND@])"
+        },
+        {
+          "(/tmp-upload-images/){1}(.)*$": "A lot of hack attempts tries to exploit the [@FOUND@] folder"
+        },
+        {
+          "(/wp-content/(.)*)$": "[@FOUND@] folder doesn't exists on a Joomla! website"
+        },
+        { ".*(proc/self/environ).*$": "Attempt Shell attacks" },
+        { ".*(/xmlrpc/).*$": "[@FOUND@] found in the url" },
+        {
+          "(\\+Result:).*$": "Querystring attack, [@FOUND@] shouldn't be found in an url"
+        },
+        {
+          ".*\\?(.*http%3A%2F%2F).*$": "The characters 'http://' have been used in the querystring, can be a XSS attack or SPAM"
+        },
+        {
+          ".*(%20select%20|\\+select\\+|jos_users|contact_ws|group_concat|\\*!select\\*){1}.*$": "Attempt SQL Injection ([@FOUND@])"
+        },
+        {
+          "(.*'')$": "Attempt SQL Injection, url ending by a double single quote"
+        },
+        {
+          "(union all|concat(_ws)?\\(|\\+select\\+)": "Attempt SQL Injection ([@FOUND@])"
+        },
+        {
+          "^(/(admin|_*backups?|bitrix|bkp|boards?|CKeditor|community|database|db|db-*_*backups?|dbadmin|_?dump|fck|fckeditor|ipb|kcfinder|keke_client|kindeditor|myadmin|mysql|mysqladmin|phpadmin|phpmyadmin\\d*|phpMyAdmin\\d*|plus|pma|site_backups?|sql(admin)?|ThinkPHP|URLRewrite|vbulletin|wp-(admin|coupload|tmp)|wordpress)/).*$": "The [@FOUND@] root folder doesn't exists on a Joomla! website"
+        },
+        {
+          "(/stories/.*\\.php(\\?)*(.)*)$": "php execution in the /stories/ folder is prohibited"
+        },
+        {
+          "(\\.(gif|png|jpe?g|php)\\?rf){1}$": "A lot of hacking [@FOUND@] script are called with the ?rf parameter"
+        },
+        {
+          "(\\.(ash?x|asp|aspx|phtml?){1}(\\?(.)*)*)$": "The presence of the [@FOUND@] file's extension denotes a possible hack attempt"
+        },
+        {
+          "(/php-ofc-library/){1}": "A lot of attacks are trying to exploit the [@FOUND@] standard php library that is included in some components"
+        },
+        {
+          ".*(/php(t|T)humb/php(t|T)humb\\.php).*$": "A lot of attacks are trying to exploit the [@FOUND@] standard php script"
+        },
+        {
+          "(option=com_jce&task=plugin&plugin=imgmanager&file=imgmanager&method=form){1}(.)*": "JCE upload attempt --> see http status, if 200 the upload was succeeded"
+        },
+        { "/(components/com_jce/jce\\.php).*$": "JCE.php attempt" },
+        {
+          "/(components/com_weblinks/views/retentive\\.php)$": "The [@FOUND@] file doesn't exists on a standard Joomla installation"
+        },
+        {
+          "/(modules/mod_login/cache\\.php)$": "The [@FOUND@] file doesn't exists on a standard Joomla installation"
+        },
+        {
+          ".*(/backup\\.(tar\\.gz|zip))$": "Tentative to access a backup file ([@FOUND@])"
+        },
+        {
+          ".*(\\.tar\\.gz|\\.tar)$": "Tentative to access a tar.gz ([@FOUND@])"
+        },
+        {
+          ".*(\\.(bak|config|sql|ini|log|sh|inc|dist))$": "Tentative to access a specific file extension ([@FOUND@])"
+        },
+        {
+          ".*(/site/INSTALL)$": "[@FOUND@] doesn't exists on a Joomla! website"
+        },
+        {
+          "(option=com_media&view=.*(&tmpl=component)?&e_name=jform_articletext)": "Joomla com_media upload attempt"
+        },
+        {
+          "(data:image/.*;base64)": "'data:image' followed by ';base64' in the url (for instance /templates/data:image/gif;base64,xxxxxxxxx)"
+        },
+        { "(\\.html\\.php)": "Bad file extension ([@FOUND@])" },
+        {
+          "(PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})": "PHP Easter Eggs"
+        },
+        { "(%27%22|\"')": "Presence of the \"' pattern" },
+        {
+          "(&amp;sa=.*&amp;(ei|ved|usg){1}=)": "Presence of a &sa= parameter and with a second parameter in (ei, ved or usg)"
+        },
+        {
+          "(%3Cscript%3|function\\(|html\\()": "XSS attack, presence of a script tag or a js function in the url"
+        },
+        {
+          ".*sexycontactform.*/files/.*\\.php": "Sexy Contact Form - Exploit of a php uploaded script (video tutorial : https://www.youtube.com/watch?v=X60WjQJBDdo)"
+        }
+      ]
+    },
+    "components": {
+      "info": "Mention here components, modules, plugins, templates, ... that are not installed on the site.  Requests to one of these components will be reported in the hack attempt section",
+      "regex": [
+        {
+          "/(com_alphauserpoints|com_artforms|com_banners|com_civicrm|com_community|com_djclassifieds|com_facileforms|com_hotornot2|com_ignitegallery|com_jinc|com_jnewsletter|com_jnews|com_joomleague|com_jmultimedia|com_jobprofile|com_maianmedia|com_oziogallery2?|com_redmystic|com_redshop|com_rsfiles|com_s5clanroster|com_x-shop){1}/": "Call to a Joomla [@FOUND@] component identified, possible hack attempt if this component isn't installed on your site : somebody tries to exploit a known security hole in that component"
+        },
+        {
+          "/(mod_acepolls|mod_araticlhess|mod_fxprev|mod_joomla_wso){1}/": "Call to a module [@FOUND@] identified, possible hack attempt"
+        }
+      ]
+    },
+    "remoteHost": {
+      "info": "Any connections from these host are bad because they've been flagged as bad host, attacks have been started from them. All requests made from these host will be reported in the 'Possible attacks' part",
+      "full": [
+        "01.aesthough.com",
+        "srv2.web1jutaan.com",
+        "master034.unihost.com",
+        "94.228.220.68",
+        "173.208.182.26",
+        "211.210.124.195",
+        "ks366018.kimsufi.com",
+        "64.32.12.15",
+        "190.107.81.69",
+        "46.160.85.211",
+        "31.202.241.245",
+        "31.202.241.229",
+        "46.191.198.234",
+        "88.249.201.206",
+        "69.10.32.169",
+        "177.207.110.26",
+        "23.81.179.226",
+        "85.25.184.71",
+        "23.81.85.140",
+        "92.48.194.33",
+        "176.102.37.84",
+        "78.31.90.120",
+        "94.23.8.76",
+        "64.207.147.93",
+        "new-sagedesignstudio.com",
+        "31.215.205.151",
+        "194.105.156.10",
+        "185.8.107.38",
+        "14.102.148.38",
+        "46.105.11.66",
+        "31.3.225.194",
+        "95.110.186.170",
+        "178.33.238.23",
+        "178.17.166.69",
+        "23.81.85.190",
+        "31.210.127.87",
+        "37.148.161.158",
+        "37.247.101.60",
+        "37.59.49.152",
+        "54.191.15.204",
+        "64.62.254.215",
+        "72.167.113.155",
+        "81.171.38.183",
+        "84.53.242.246",
+        "85.136.71.100",
+        "89.238.128.232",
+        "94.23.2.39",
+        "109.107.199.245",
+        "141.255.164.118",
+        "144.76.91.137",
+        "144.76.87.246",
+        "175.117.145.50",
+        "176.31.243.222",
+        "176.31.117.105",
+        "78.109.164.176",
+        "91.230.60.182",
+        "188.190.100.50",
+        "212.150.186.56",
+        "217.127.47.157",
+        "188.190.100.50",
+        "190.123.47.120",
+        "194.28.172.72",
+        "203.167.239.22",
+        "212.150.186.56",
+        "217.127.47.157",
+        "178.32.28.166",
+        "185.19.92.163",
+        "162.212.34.30",
+        "sofia198.startdedicated.com",
+        "183.94.35.232",
+        "180.210.205.209",
+        "94.23.12.176",
+        "ns3098605.ovh.net",
+        "186.202.127.48",
+        "46.22.130.84",
+        "193.231.40.156",
+        "94.23.98.251",
+        "72.233.127.179",
+        "194.201.253.5",
+        "virtuo2.sdmservice.it",
+        "182.18.162.207",
+        "91.121.85.219",
+        "213.206.239.154",
+        "188.132.153.10",
+        "109.226.63.149",
+        "107.183.16.163",
+        "5.158.234.7",
+        "ec2-54-225-121-102.compute-1.amazonaws.com",
+        "ns1.lahno-web5.de",
+        "95.8.168.235",
+        "31.202.241.245.format-tv.net",
+        "vitalenterprises.com",
+        "178.32.28.166",
+        "38.89.160.108",
+        "63.141.243.27",
+        "37.247.108.23",
+        "88.241.135.186",
+        "87.243.2.194",
+        "62.113.223.5",
+        "64.26.59.15",
+        "68.115.58.119",
+        "176.31.253.50",
+        "88.226.59.176",
+        "88.252.80.177",
+        "37.247.108.23",
+        "88.241.254.135",
+        "78.166.103.120",
+        "63.141.248.28"
+      ],
+      "regex": [
+        { ".*(corbina\\.ru)$": "corbina\\.ru" },
+        { ".*(dievil\\.la)$": "dievil\\.la" },
+        { ".*(ertelecom\\.ru)$": "ertelecom\\.ru" },
+        { ".*(format-tv\\.net)$": "format-tv\\.net" },
+        { ".*(hostland\\.ru)$": "hostland\\.ru" },
+        { ".*(kenyaweb\\.com)$": "kenyaweb\\.com" },
+        { ".*(racsa\\.co\\.cr)$": "racsa.co.cr" },
+        { ".*(rdsnet.ro)$": "rdsnet.ro" },
+        { ".*(rev\\.poneytelecom.eu)$": "rev\\.poneytelecom\\.eu" },
+        { ".*(sadecehosting\\.net)$": "sadecehosting\\.net" },
+        { ".*(tiflhost\\.net)$": "tiflhost\\.net" },
+        { ".*(ttnet\\.com.tr)$": "ttnet\\.com\\.tr" },
+        { ".*(ttnetdc\\.com)$": "ttnetdc\\.com" },
+        { ".*(tukrga\\.sbcglobal.net)$": "tukrga\\.sbcglobal\\.net" }
+      ]
+    },
+    "userAgent": {
+      "info": "Any connections from these userAgent are bad because they've been flagged as bad host, attacks have been started from them. All requests made from these host will be reported in the 'Possible attacks' part",
+      "regex": [
+        { ".*(JDatabaseDriverMysqli).*": "Joomla 0day" },
+        { ".*(JFactory::getConfig).*": "Joomla 0day" },
+        { ".*(base64_decode).*": "Joomla 0day" },
+        { ".*(eval\\().*": "Joomla 0day" },
+        { "^(niki-bot)$": "niki-bot" },
+        { "^(BOT/0.1 (BOT for JCE))$": "BOT/0.1 (BOT for JCE)" },
+        { "^(Go 1.1 package http)$": "Go 1.1 package http" },
+        { "^(libwww-perl/6.04)$": "libwww-perl/6.04" },
+        {
+          "^(WhatWeb/0.4.8-dev)$": "WhatWeb/0.4.8-dev scan websites and tries to extract informations about the CMS, version number, emails, ..."
+        }
+      ]
+    }
+  }
+}
