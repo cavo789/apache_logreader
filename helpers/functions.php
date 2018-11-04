@@ -139,8 +139,8 @@ class logReaderFct
             
             // The time that the request was received. The format is:
             'date' => self::ConvertLogDate($matches[4]),
-            'time' => $matches[5],
-            'timezone' => $matches[6],
+            //'time' => $matches[5],
+            //'timezone' => $matches[6],
             
             // HTTP method (POST, GET, HEAD, ...)
             'method' => $matches[7],

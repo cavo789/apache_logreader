@@ -768,7 +768,12 @@ class logReader
             $totalSize += $entry['bytes'];
         }
 
-        $result .= '<h3>' . str_replace('/', DS, $filename) . '</h3>' .
+        $readOnly = '';
+        if (!is_writable($filename)) {
+            $readOnly = '&nbsp;<strong style="color:red;">FILE IS READ-ONLY</strong>';
+        } 
+
+        $result .= '<h3>' . str_replace('/', DS, $filename) . $readOnly. '</h3>' .
             '<strong>Filesize: ' . logReaderFct::ShowFriendlySize(filesize($filename)) . '&nbsp;-&nbsp;' .
             'Number of lines: <span id="nbrRowDisplay">' . number_format($this->totalRow, 0, ',', ' ') . '</span><span id="nbrRow" class="hidden">' . $this->totalRow . '</span>&nbsp;-&nbsp;' .
             'Selected number of lines: <span id="nbrSelected">0</span>&nbsp;(<span id="nbrSelectedPct">0%</span> | <span id="nbrBytesDisplay">0</span><span id="nbrBytesIntern" class="hidden">0</span>)&nbsp;' .
