@@ -1,6 +1,6 @@
-![banner](images/banner.jpg)
-
 # Apache Log reader
+
+![banner](./banner.svg)
 
 > Interface that allows you to analyze the log of web access to your site's resources and highlight URL attack attempts
 
@@ -65,6 +65,10 @@ If you need to change something, take a look on the `logreader.json` file. You'l
 
 1. The demo Apache logfile comes from [Elasticsearch examples](https://github.com/elastic/examples/tree/master/Common%20Data%20Formats/apache_logs)
 2. I wrote this script at the end of 2015 and, a priori, I don't think I'm going to make it evolve. I decided to share it too it is publicly accessible on GitHub. If you use it and improve it, it would be nice to share your work.
+
+## Optimization paths
+
+The log reader code can perhaps be replaced by a composer dependency like [https://github.com/tommy-muehle/error-log-parser](https://github.com/tommy-muehle/error-log-parser).
 
 ## License
 
